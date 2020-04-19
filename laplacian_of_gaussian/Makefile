@@ -1,15 +1,14 @@
-CC = gcc
+CC = g++
 CFLAGS = -g -Wall
-PROG = LaplacianOfGaussian
+LIBS = `pkg-config --libs opencv`
 
-LIBS = `pkg-config opencv --cflags --libs`
-
-LaplacianOfGaussian : log.cpp
+laplacianOfGaussian : log.cpp
 	$(CC) $(CFLAGS) -o $@ $< $(LIBS)
 
-LaplacianOfGaussian-cu : log.cu
+laplacianOfGaussian-cu : log.cu
 	nvcc -o $@ $< $(LIBS)
 
 .PHONY : clean
 
-clean : tm LaplacianOfGaussian
+clean : 
+			rm laplacianOfGaussian
