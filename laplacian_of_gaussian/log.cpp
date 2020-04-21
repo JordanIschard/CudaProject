@@ -108,7 +108,7 @@ int main(int argc, char** argv)
 
         imwrite("out.jpg",out);
 
-        auto duration = chrono::duration_cast<chrono::microseconds>(stop - start); 
+        auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start); 
   
         cout << duration.count() << endl; 
 
