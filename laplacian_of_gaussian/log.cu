@@ -51,7 +51,7 @@ int main(int argc, char** argv)
         std::cout << "Création du timer faite" << std::endl;
 
         // Récupère l'image
-        cv::Mat image_in = cv::imread(argv[1], IMREAD_UNCHANGED);
+        cv::Mat image_in = cv::imread(argv[1], cv::IMREAD_UNCHANGED);
         // Récupère les informations des pixels
         auto data_in = image_in.data;
         auto rows = image_in.rows;
