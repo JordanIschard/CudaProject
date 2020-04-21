@@ -50,6 +50,8 @@ int main(int argc, char** argv)
         cudaEventCreate(&start);
         cudaEventCreate(&stop);
 
+        cout << "Création du timer faite" << endl;
+
         // Récupère l'image
         Mat image_in = imread(argv[1], IMREAD_UNCHANGED);
         // Récupère les informations des pixels
@@ -57,32 +59,46 @@ int main(int argc, char** argv)
         auto rows = image_in.rows;
         auto cols = image_in.cols;
 
+        cout << "rows = " << rows << " columns = " << cols << endl;
 
         // On crée les informations de sorties 
         unsigned char* data_out = (unsigned char*)malloc((cols * rows)*sizeof(unsigned char)); 
         // On crée l'image de sortie
         Mat image_out(rows, cols, CV_8UC1, data_out);
 
+        cout << "Image et données de sortie initialisées" << endl
+
         // On copie l'image d'entrée sur le device
         unsigned char* image_in_device;
         cudaMalloc(&image_in_device, 3 * rows * cols);
         cudaMemcpy(image_in_device, data_in, 3 * rows * cols, cudaMemcpyHostToDevice );
 
+        cout << "image d'entrée mise sur le device" << endl;
+
         // On crée une copie des informations de sortie sur le device
         unsigned char* data_out_device;
         cudaMalloc(&data_out_device, rows * cols);
 
+        cout << "Données de sortie misent sur le device" << endl;
+
         dim3 threads(32, 32 );
         dim3 blocks(( cols -1 ) / threads.x + 1 , ( rows - 1) / threads.y + 1);
 
+        cout << "Nombre de threads = " << threads.x << "  " << threads.y << endl;
+        cout << "Nombre de blocks = " << blocks.x << "  " << blocks.y << endl;
+
         // Lancement du timer
         cudaEventRecord(start);
+
+        cout << "Lancement du timer" << endl;
 
         // lancement du programme
         laplacian_of_gaussian<<< blocks , threads >>>(image_in_device, data_out_device, rows, cols);
 
         // On arrête le timer
         cudaEventRecord(stop);
+
+        cout << "Fin du timer" << endl;
 
         cudaDeviceSynchronize();
         auto err = cudaGetLastError();
