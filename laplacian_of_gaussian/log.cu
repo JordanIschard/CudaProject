@@ -117,7 +117,7 @@ int main(int argc, char** argv)
 
         std::cout << "Lancement du timer" << std::endl;
 
-        grayscale<<< blocks , threads >>>(image_in_device, image_gray_device, cols, rows);
+        grayscale<<< blocks , threads >>>(image_in_device, image_gray_device, rows, cols);
 
         cudaMemcpy(image_gray.data(), image_gray_device,  rows * cols, cudaMemcpyDeviceToHost );
         cudaMemcpy(image_gray_device, image_gray.data(),  rows * cols, cudaMemcpyHostToDevice );
