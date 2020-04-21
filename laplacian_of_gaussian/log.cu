@@ -89,6 +89,7 @@ int main(int argc, char** argv)
         unsigned char* data_out_device;
 
         cudaMalloc(&image_in_device, 3 * rows * cols);
+        cudaMalloc(&out_gray_device, rows * cols);
         cudaMalloc(&image_gray_device, rows * cols);
         cudaMalloc(&data_out_device, rows * cols);
     
@@ -117,10 +118,10 @@ int main(int argc, char** argv)
 
         std::cout << "Lancement du timer" << std::endl;
 
-        grayscale<<< blocks , threads >>>(image_in_device, image_gray_device, rows, cols);
+        grayscale<<< blocks , threads >>>(image_in_device, out_gray_device, rows, cols);
 
-        //cudaMemcpy(image_gray.data(), image_gray_device,  rows * cols, cudaMemcpyDeviceToHost );
-        //cudaMemcpy(image_gray_device, image_gray.data(),  rows * cols, cudaMemcpyHostToDevice );
+        cudaMemcpy(image_gray.data(), out_gray_device,  rows * cols, cudaMemcpyDeviceToHost );
+        cudaMemcpy(image_gray_device, image_gray.data(),  rows * cols, cudaMemcpyHostToDevice );
         
         // lancement du programme
         laplacian_of_gaussian<<< blocks , threads >>>(image_gray_device, data_out_device, rows, cols);
