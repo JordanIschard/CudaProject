@@ -72,7 +72,7 @@ int main(int argc, char** argv)
         // On crée une copie des informations de sortie sur le device
         unsigned char* data_out_device;
 
-        cudaMalloc(&image_in_device, 3 * rows * cols);
+        cudaMalloc(&image_in_device, rows * cols);
     
 	    auto err1 = cudaGetLastError();
         if(err1 != cudaSuccess){
@@ -86,7 +86,7 @@ int main(int argc, char** argv)
 
         std::cout << "Données de sortie sur le device allouées" << std::endl;
 
-        cudaMemcpy(image_in_device, data_in,  3 * rows * cols, cudaMemcpyHostToDevice );
+        cudaMemcpy(image_in_device, data_in,  rows * cols, cudaMemcpyHostToDevice );
                                                                                     
         std::cout << "Image d'entrée mise sur le device" << std::endl;
 
