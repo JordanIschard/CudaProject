@@ -74,8 +74,6 @@ int main(int argc, char** argv)
 
         // On crée les informations de sorties 
         std::vector<unsigned char> out(rows * cols); 
-        // On crée les informations de sorties 
-        std::vector<unsigned char> image_gray(rows * cols); 
         // On crée l'image de sortie
         cv::Mat image_out(rows, cols, CV_8UC1, out.data());
 
@@ -83,13 +81,10 @@ int main(int argc, char** argv)
 
         // On copie l'image d'entrée sur le device
         unsigned char * image_in_device;
-        // On crée une copie des données d'entrée en noir et blanc
-        unsigned char * image_gray_device;
         // On crée une copie des informations de sortie sur le device
         unsigned char* data_out_device;
 
-        cudaMalloc(&image_in_device, 3 * rows * cols);
-        cudaMalloc(&image_gray_device, rows * cols);
+        cudaMalloc(&image_in_device, rows * cols);
         cudaMalloc(&data_out_device, rows * cols);
     
 	    auto err1 = cudaGetLastError();
@@ -102,7 +97,7 @@ int main(int argc, char** argv)
 
         std::cout << "Données de sortie sur le device allouées" << std::endl;
 
-        cudaMemcpy(image_in_device, data_in,  3 * rows * cols, cudaMemcpyHostToDevice );
+        cudaMemcpy(image_in_device, data_in,  rows * cols, cudaMemcpyHostToDevice );
                                                                                     
         std::cout << "Image d'entrée mise sur le device" << std::endl;
 
@@ -116,14 +111,9 @@ int main(int argc, char** argv)
         cudaEventRecord(start);
 
         std::cout << "Lancement du timer" << std::endl;
-
-        grayscale<<< blocks , threads >>>(image_in_device, data_out_device, rows, cols);
-
-        //cudaMemcpy(image_gray.data(), image_gray_device,  rows * cols, cudaMemcpyDeviceToHost );
-        //cudaMemcpy(image_gray_device, image_gray.data(),  rows * cols, cudaMemcpyHostToDevice );
         
         // lancement du programme
-        //laplacian_of_gaussian<<< blocks , threads >>>(image_gray_device, data_out_device, rows, cols);
+        laplacian_of_gaussian<<< blocks , threads >>>(image_in_device, data_out_device, rows, cols);
 
         // On arrête le timer
         cudaEventRecord(stop);
@@ -150,7 +140,6 @@ int main(int argc, char** argv)
 
         // On libère l'espace sur le device
         cudaFree(image_in_device);
-        cudaFree(image_gray_device);
         cudaFree(data_out_device);
     }
 
