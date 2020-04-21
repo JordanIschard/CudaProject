@@ -2,8 +2,6 @@
 #include <opencv2/opencv.hpp> 
 #include <vector>
 
-using namespace cv;
-using namespace std;
 
 // Matrix de convolution 
 //
@@ -50,24 +48,24 @@ int main(int argc, char** argv)
         cudaEventCreate(&start);
         cudaEventCreate(&stop);
 
-        cout << "Création du timer faite" << endl;
+        std::cout << "Création du timer faite" << std::endl;
 
         // Récupère l'image
-        Mat image_in = imread(argv[1], IMREAD_UNCHANGED);
+        cv::Mat image_in = cv::imread(argv[1], IMREAD_UNCHANGED);
         // Récupère les informations des pixels
         auto data_in = image_in.data;
         auto rows = image_in.rows;
         auto cols = image_in.cols;
 
 	
-        cout << "rows = " << rows << " columns = " << cols << endl;
+        std::cout << "rows = " << rows << " columns = " << cols << std::endl;
 
         // On crée les informations de sorties 
-        vector<unsigned char> out(rows * cols); 
+        std::vector<unsigned char> out(rows * cols); 
         // On crée l'image de sortie
-        Mat image_out(rows, cols, CV_8UC1, out.data());
+        cv::Mat image_out(rows, cols, CV_8UC1, out.data());
 
-        cout << "Image et données de sortie initialisées" << endl;
+        std::cout << "Image et données de sortie initialisées" << std::endl;
 
         // On copie l'image d'entrée sur le device
         unsigned char * image_in_device;
@@ -77,23 +75,23 @@ int main(int argc, char** argv)
         cudaMalloc(&image_in_device, 3 * rows * cols);
         cudaMalloc(&data_out_device, rows * cols);
     
-        cout << "Image sur le device allouée" << endl;
-        cout << "Données de sortie sur le device allouées" << endl;
+        std::cout << "Image sur le device allouée" << std::endl;
+        std::cout << "Données de sortie sur le device allouées" << std::endl;
 
         cudaMemcpy(image_in_device, data_in, 3 * rows * cols, cudaMemcpyHostToDevice );
                                                                                     
-        cout << "Image d'entrée mise sur le device" << endl;
+        std::cout << "Image d'entrée mise sur le device" << std::endl;
 
         dim3 threads(32, 32 );
         dim3 blocks(( cols -1 ) / threads.x + 1 , ( rows - 1) / threads.y + 1);
 
-        cout << "Nombre de threads = " << threads.x << "  " << threads.y << endl;
-        cout << "Nombre de blocks = " << blocks.x << "  " << blocks.y << endl;
+        std::cout << "Nombre de threads = " << threads.x << "  " << threads.y << std::endl;
+        std::cout << "Nombre de blocks = " << blocks.x << "  " << blocks.y << std::endl;
 
         // Lancement du timer
         cudaEventRecord(start);
 
-        cout << "Lancement du timer" << endl;
+        std::cout << "Lancement du timer" << std::endl;
 
         // lancement du programme
         laplacian_of_gaussian<<< blocks , threads >>>(image_in_device, data_out_device, rows, cols);
@@ -101,7 +99,7 @@ int main(int argc, char** argv)
         // On arrête le timer
         cudaEventRecord(stop);
 
-        cout << "Fin du timer" << endl;
+        std::cout << "Fin du timer" << std::endl;
 
         cudaDeviceSynchronize();
         auto err = cudaGetLastError();
@@ -119,7 +117,7 @@ int main(int argc, char** argv)
         cudaEventElapsedTime(&milliseconds, start, stop);
         printf("Execution time : %f",milliseconds);
 
-        imwrite( "outCuda.jpg", image_out);
+        cv::imwrite( "outCuda.jpg", image_out);
 
         // On libère l'espace sur le device
         cudaFree(image_in_device);
