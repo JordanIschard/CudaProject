@@ -75,9 +75,12 @@ int main(int argc, char** argv)
         cudaMalloc(&image_in_device, 3 * rows * cols);
         cudaMalloc(&data_out_device, rows * cols);
     
-        if(image_in_device == nullptr){
-            std::cout << "You're fuck up" << std::endl;
-        }
+	auto err1 = cudaGetLastError();
+        if(err1 != cudaSuccess){
+            std::cout << "You're fuck up " << cudaGetErrorString(err1) << std::endl;
+        }else{
+	    std::cout << "kuvheuio" << std::endl;
+	}
         std::cout << "Image sur le device allouée" << std::endl;
         std::cout << "Données de sortie sur le device allouées" << std::endl;
 
