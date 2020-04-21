@@ -56,9 +56,12 @@ int main(int argc, char** argv)
         Mat image_in = imread(argv[1], IMREAD_UNCHANGED);
         // Récupère les informations des pixels
         auto data_in = image_in.data;
+
+	imwrite("outTest.jpg",image_in);
         auto rows = image_in.rows;
         auto cols = image_in.cols;
 
+	cout << "First data : " <<  data_in[0] << " " << data_in[1] << " " << data_in[2] << endl;
         cout << "rows = " << rows << " columns = " << cols << endl;
 
         // On crée les informations de sorties 
@@ -66,13 +69,16 @@ int main(int argc, char** argv)
         // On crée l'image de sortie
         Mat image_out(rows, cols, CV_8UC1, data_out);
 
-        cout << "Image et données de sortie initialisées" << endl
+        cout << "Image et données de sortie initialisées" << endl;
 
         // On copie l'image d'entrée sur le device
         unsigned char* image_in_device;
         cudaMalloc(&image_in_device, 3 * rows * cols);
-        cudaMemcpy(image_in_device, data_in, 3 * rows * cols, cudaMemcpyHostToDevice );
+    
+        cout << "Image sur le device allouée" << endl;
 
+        cudaMemcpy(image_in_device, data_in, 3 * rows * cols, cudaMemcpyHostToDevice );
+                                                                                    
         cout << "image d'entrée mise sur le device" << endl;
 
         // On crée une copie des informations de sortie sur le device
