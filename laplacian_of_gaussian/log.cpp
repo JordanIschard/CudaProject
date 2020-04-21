@@ -5,6 +5,43 @@
 using namespace cv;
 using namespace std;
 
+// Matrix de convolution 
+//
+//  0  0 -1  0  0
+//  0 -1 -2 -1  0
+// -1 -2 16 -2 -1
+//  0 -1 -2 -1  0
+//  0  0 -1  0  0
+void laplacian_of_gaussian_bis(unsigned char* data_in, unsigned char* data_out, int rows, int cols)
+{
+
+    int result;
+    for (int i = 0; i < rows; ++i)
+    {
+        for (int j = 0; j < cols; ++j)
+        {
+            result = 0;
+            if( i >= 2 && i < (rows - 2) && j >= 2 && j < (cols - 2) )
+            {
+
+                // Tous les pixels que l'on multiplie par 16
+                result = data_in[3 * (i * cols + j)] * 16
+
+                // Tous les pixels que l'on multiplie par -2
+                + ( data_in[3 * ((i-1) * cols + j)] + data_in[3 * ((i-+1) * cols + j)] + data_in[3 * (i * cols + (j-1))] + data_in[3 * (i * cols + (j+1))] ) * -2
+
+                // Tous les pixels que l'on multiplie par -1
+                + ( data_in[3 * ((i-2) * cols + j)] + data_in[3 * ((i+2) * cols + j)] + data_in[3 * (i * cols + (j-2))] + data_in[3 * (i * cols + (j+2))] 
+                  + data_in[3 * ((i-1) * cols + (j-1))] + data_in[3 * ((i-1) * cols + (j+1))] + data_in[3 * ((i+1) * cols + (j-1))] + data_in[3 * ((i+1) * cols + (j+1))] ) * -1;
+
+                result = result * result;
+                result > 255*255 ? result = 255*255 : result;
+
+                data_out[ i * cols + j] = sqrt(result);
+            }
+        }
+    }
+}
 
 void laplacian_of_gaussian(unsigned char* in_data, unsigned char* out_data, int rows, int cols)
 {
@@ -48,7 +85,6 @@ void laplacian_of_gaussian(unsigned char* in_data, unsigned char* out_data, int 
                 c > 255*255 ? c = 255*255 : c;
 
                 out_data[ i * cols + j ] = sqrt(c);
-                //printf("test[%d,%d] : %d\n",i,j,image.data[i * image.cols + j]);
             }
         }
 }
@@ -60,13 +96,13 @@ int main(int argc, char** argv)
     if(argc == 2){
         Mat image = imread(argv[1]);
 
-        unsigned char* out_data = (unsigned char*)malloc((image.cols * image.rows)*sizeof(unsigned char)); 
+        unsigned char* data_out = (unsigned char*)malloc((image.cols * image.rows)*sizeof(unsigned char)); 
 
-        Mat out( image.rows , image.cols , CV_8UC1 , out_data);
+        Mat out( image.rows , image.cols , CV_8UC1 , data_out);
 
         auto start = chrono::high_resolution_clock::now(); 
 
-        laplacian_of_gaussian(image.data,out_data,image.rows,image.cols);
+        laplacian_of_gaussian_bis(image.data,data_out,image.rows,image.cols);
         
         auto stop = chrono::high_resolution_clock::now(); 
 

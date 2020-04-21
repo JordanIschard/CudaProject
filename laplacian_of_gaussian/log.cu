@@ -5,47 +5,38 @@
 using namespace cv;
 using namespace std;
 
+// Matrix de convolution 
+//
+//  0  0 -1  0  0
+//  0 -1 -2 -1  0
+// -1 -2 16 -2 -1
+//  0 -1 -2 -1  0
+//  0  0 -1  0  0
 __global__ void laplacian_of_gaussian(unsigned char* data_in, unsigned char* data_out, int rows, int cols)
 {
     // On récupère les coordonnées du pixel
     auto i = blockIdx.x * blockDim.x + threadIdx.x;
     auto j = blockIdx.y * blockDim.y + threadIdx.y;
 
-    int c = 0;
-    for (int shift_row = i-2; shift_row <= i+2; shift_row++)
-    {
-        for (int shift_col = j-2; shift_col <= j+2; shift_col++)
-        {
-            if(0 <= shift_col && shift_col < cols && 0 <= shift_row && shift_row < rows)
-            {
-                if(shift_col == j && shift_row == i)
-                {
-                    c += data_in[3 * (shift_row * cols + shift_col)] * 16;         
-                }
-                else
-                {
-                    if((shift_col == j && (shift_row == i-1 || shift_row == i+1)) 
-                    || (shift_row == i && (shift_col == j-1 || shift_col == j+1)))
-                    {
-                        c += data_in[3 * (shift_row * cols + shift_col)] * -2;   
-                    }
-                    else
-                    {
-                        if(((shift_row == i-1 || shift_row == i+1) && (shift_col == j-1 || shift_col == j+1))
-                        || (shift_col == j && (shift_row == i-2 || shift_row == i+2))
-                        || (shift_row == i && (shift_col == j-2 || shift_col == j+2)))
-                        {
-                            c += data_in[3 * (shift_row * cols + shift_col)] * -1;
-                        }   
-                    }
-                }               
-            }
-        }
-    }
-    c = c*c;
-    c > 255*255 ? c = 255*255 : c;
+    int result = 0;
 
-    data_out[ i * cols + j ] = sqrt(c);
+    if( i >= 2 && i < (rows - 2) && j >= 2 && j < (cols - 2) )
+    {
+        // Tous les pixels que l'on multiplie par 16
+        result = data_in[3 * (i * cols + j)] * 16
+
+        // Tous les pixels que l'on multiplie par -2
+        + ( data_in[3 * ((i-1) * cols + j)] + data_in[3 * ((i-+1) * cols + j)] + data_in[3 * (i * cols + (j-1))] + data_in[3 * (i * cols + (j+1))] ) * -2
+
+        // Tous les pixels que l'on multiplie par -1
+        + ( data_in[3 * ((i-2) * cols + j)] + data_in[3 * ((i+2) * cols + j)] + data_in[3 * (i * cols + (j-2))] + data_in[3 * (i * cols + (j+2))] 
+            + data_in[3 * ((i-1) * cols + (j-1))] + data_in[3 * ((i-1) * cols + (j+1))] + data_in[3 * ((i+1) * cols + (j-1))] + data_in[3 * ((i+1) * cols + (j+1))] ) * -1;
+
+        result = result * result;
+        result > 255*255 ? result = 255*255 : result;
+
+        data_out[ i * cols + j ] = sqrt(result);
+    }
 }
 
 int main(int argc, char** argv)
@@ -53,6 +44,11 @@ int main(int argc, char** argv)
     printf("Number of argument : %d\n", argc);
 
     if(argc == 2){
+
+        // Mesure de temps
+        cudaEvent_t start, stop;
+        cudaEventCreate(&start);
+        cudaEventCreate(&stop);
 
         // Récupère l'image
         Mat image_in = imread(argv[1], IMREAD_UNCHANGED);
@@ -79,7 +75,14 @@ int main(int argc, char** argv)
         dim3 threads(32, 32 );
         dim3 blocks(( cols -1 ) / threads.x + 1 , ( rows - 1) / threads.y + 1);
 
+        // Lancement du timer
+        cudaEventRecord(start);
+
+        // lancement du programme
         laplacian_of_gaussian<<< blocks , threads >>>(image_in_device, data_out_device, rows, cols);
+
+        // On arrête le timer
+        cudaEventRecord(stop);
 
         cudaDeviceSynchronize();
         auto err = cudaGetLastError();
@@ -91,6 +94,12 @@ int main(int argc, char** argv)
         // On copie les informations de sortie du device vers le host
         cudaMemcpy(data_out, data_out_device, rows * cols, cudaMemcpyDeviceToHost );
         
+        // On récupère le temps d'exécution
+        cudaEventSynchronize(stop);
+        auto milliseconds = 0;
+        cudaEventElapsedTime(&milliseconds, start, stop);
+        printf("Execution time : %f",milliseconds);
+
         imwrite( "outCuda.jpg", image_out);
 
         // On libère l'espace sur le device
