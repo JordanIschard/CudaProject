@@ -5,6 +5,18 @@
 using namespace cv;
 using namespace std;
 
+// Coloration en noir et blanc
+void grayscale(unsigned char* data_in, unsigned char* data_out, int rows, int cols)
+{
+    for (int i = 0; i < rows; ++i)
+    {
+        for (int j = 0; j < cols; ++j)
+        {
+            data_out[i * cols + j] = ( 307 * data_in[3* (i * cols + j)] + 604 * data_in[3 * (i * cols + j) + 1] + 113 * data_in[3 * (i * cols + j) + 2] ) /1024;
+        }
+    }
+}
+
 // Matrix de convolution 
 //
 //  0  0 -1  0  0
@@ -25,14 +37,14 @@ void laplacian_of_gaussian_bis(unsigned char* data_in, unsigned char* data_out, 
             {
 
                 // Tous les pixels que l'on multiplie par 16
-                result = data_in[3 * (i * cols + j)] * 16
+                result = data_in[(i * cols + j)] * 16
 
                 // Tous les pixels que l'on multiplie par -2
-                + ( data_in[3 * ((i-1) * cols + j)] + data_in[3 * ((i-+1) * cols + j)] + data_in[3 * (i * cols + (j-1))] + data_in[3 * (i * cols + (j+1))] ) * -2
+                + ( data_in[((i-1) * cols + j)] + data_in[((i-+1) * cols + j)] + data_in[(i * cols + (j-1))] + data_in[(i * cols + (j+1))] ) * -2
 
                 // Tous les pixels que l'on multiplie par -1
-                + ( data_in[3 * ((i-2) * cols + j)] + data_in[3 * ((i+2) * cols + j)] + data_in[3 * (i * cols + (j-2))] + data_in[3 * (i * cols + (j+2))] 
-                  + data_in[3 * ((i-1) * cols + (j-1))] + data_in[3 * ((i-1) * cols + (j+1))] + data_in[3 * ((i+1) * cols + (j-1))] + data_in[3 * ((i+1) * cols + (j+1))] ) * -1;
+                + ( data_in[((i-2) * cols + j)] + data_in[((i+2) * cols + j)] + data_in[(i * cols + (j-2))] + data_in[(i * cols + (j+2))] 
+                  + data_in[((i-1) * cols + (j-1))] + data_in[((i-1) * cols + (j+1))] + data_in[((i+1) * cols + (j-1))] + data_in[((i+1) * cols + (j+1))] ) * -1;
 
                 result = result * result;
                 result > 255*255 ? result = 255*255 : result;
@@ -59,14 +71,14 @@ void laplacian_of_gaussian(unsigned char* in_data, unsigned char* out_data, int 
                         {
                             if(shift_col == j && shift_row == i)
                             {
-                                c += in_data[3 * (shift_row * cols + shift_col)] * 16;         
+                                c += in_data[(shift_row * cols + shift_col)] * 16;         
                             }
                             else
                             {
                                 if((shift_col == j && (shift_row == i-1 || shift_row == i+1)) 
                                 || (shift_row == i && (shift_col == j-1 || shift_col == j+1)))
                                 {
-                                    c += in_data[3 * (shift_row * cols + shift_col)] * -2;   
+                                    c += in_data[(shift_row * cols + shift_col)] * -2;   
                                 }
                                 else
                                 {
@@ -74,7 +86,7 @@ void laplacian_of_gaussian(unsigned char* in_data, unsigned char* out_data, int 
                                     || (shift_col == j && (shift_row == i-2 || shift_row == i+2))
                                     || (shift_row == i && (shift_col == j-2 || shift_col == j+2)))
                                     {
-                                        c += in_data[3 * (shift_row * cols + shift_col)] * -1;
+                                        c += in_data[(shift_row * cols + shift_col)] * -1;
                                     }   
                                 }
                             }               
@@ -96,13 +108,16 @@ int main(int argc, char** argv)
     if(argc == 2){
         Mat image = imread(argv[1]);
 
+
+        unsigned char* tmp = (unsigned char*)malloc((image.cols * image.rows)*sizeof(unsigned char)); 
         unsigned char* data_out = (unsigned char*)malloc((image.cols * image.rows)*sizeof(unsigned char)); 
 
         Mat out( image.rows , image.cols , CV_8UC1 , data_out);
 
         auto start = chrono::high_resolution_clock::now(); 
 
-        laplacian_of_gaussian_bis(image.data,data_out,image.rows,image.cols);
+        grayscale(image.data,tmp,image.rows,image.cols);
+        laplacian_of_gaussian_bis(tmp,data_out,image.rows,image.cols);
         
         auto stop = chrono::high_resolution_clock::now(); 
 
