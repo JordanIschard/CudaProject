@@ -75,7 +75,7 @@ int main(int argc, char** argv)
         // On crée les informations de sorties 
         std::vector<unsigned char> out(rows * cols); 
         // On crée les informations de sorties 
-        std::vector<unsigned char> out_gray(rows * cols); 
+        std::vector<unsigned char> image_gray(rows * cols); 
         // On crée l'image de sortie
         cv::Mat image_out(rows, cols, CV_8UC1, out.data());
 
@@ -84,7 +84,7 @@ int main(int argc, char** argv)
         // On copie l'image d'entrée sur le device
         unsigned char * image_in_device;
         // On crée une copie des données d'entrée en noir et blanc
-        unsigned char * image_gray_device;
+        unsigned char * out_gray_device;
         // On crée une copie des informations de sortie sur le device
         unsigned char* data_out_device;
 
