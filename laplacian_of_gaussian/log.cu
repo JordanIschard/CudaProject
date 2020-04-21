@@ -66,7 +66,7 @@ int main(int argc, char** argv)
         // On crée l'image de sortie
         Mat image_out(rows, cols, CV_8UC1, data_out);
 
-        cout << "Image et données de sortie initialisées" << endl
+        cout << "Image et données de sortie initialisées" << endl;
 
         // On copie l'image d'entrée sur le device
         unsigned char* image_in_device;
