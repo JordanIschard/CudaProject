@@ -21,14 +21,14 @@ __global__ void laplacian_of_gaussian(unsigned const char* data_in, unsigned cha
     if( i >= 2 && i < (rows - 2) && j >= 2 && j < (cols - 2) )
     {
         // Tous les pixels que l'on multiplie par 16
-        result = data_in[3 * (i * cols + j)] * 16
+        result = data_in[(i * cols + j)] * 16
 
         // Tous les pixels que l'on multiplie par -2
-        + ( data_in[3 * ((i-1) * cols + j)] + data_in[3 * ((i+1) * cols + j)] + data_in[3 * (i * cols + (j-1))] + data_in[3 * (i * cols + (j+1))] ) * -2
+        + ( data_in[((i-1) * cols + j)] + data_in[((i+1) * cols + j)] + data_in[(i * cols + (j-1))] + data_in[(i * cols + (j+1))] ) * -2
 
         // Tous les pixels que l'on multiplie par -1
-        + ( data_in[3 * ((i-2) * cols + j)] + data_in[3 * ((i+2) * cols + j)] + data_in[3 * (i * cols + (j-2))] + data_in[3 * (i * cols + (j+2))] 
-            + data_in[3 * ((i-1) * cols + (j-1))] + data_in[3 * ((i-1) * cols + (j+1))] + data_in[3 * ((i+1) * cols + (j-1))] + data_in[3 * ((i+1) * cols + (j+1))] ) * -1;
+        + ( data_in[((i-2) * cols + j)] + data_in[((i+2) * cols + j)] + data_in[(i * cols + (j-2))] + data_in[(i * cols + (j+2))] 
+            + data_in[((i-1) * cols + (j-1))] + data_in[((i-1) * cols + (j+1))] + data_in[((i+1) * cols + (j-1))] + data_in[((i+1) * cols + (j+1))] ) * -1;
 
         result = result * result;
         result > 255*255 ? result = 255*255 : result;
