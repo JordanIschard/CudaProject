@@ -96,7 +96,7 @@ int main(int argc, char** argv)
         
         // On récupère le temps d'exécution
         cudaEventSynchronize(stop);
-        auto milliseconds = 0;
+        float milliseconds = 0;
         cudaEventElapsedTime(&milliseconds, start, stop);
         printf("Execution time : %f",milliseconds);
 
