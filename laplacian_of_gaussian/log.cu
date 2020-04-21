@@ -6,11 +6,13 @@
 __global__ void grayscale(unsigned const char* data_in, unsigned char* const data_out, size_t rows, size_t cols)
 {
     // On récupère les coordonnées du pixel
-    auto i = blockIdx.x * blockDim.x + threadIdx.x;
-    auto j = blockIdx.y * blockDim.y + threadIdx.y;
+    auto i = threadIdx.x;
+    auto j = threadIdx.y;
+    auto bi = blockIdx.x * blockDim.x + i;
+    auto bj = blockIdx.y * blockDim.y + j;
 
     if(i < rows && j < cols)
-        data_out[i * cols + j] = ( 307 * data_in[3* (i * cols + j)] + 604 * data_in[3 * (i * cols + j) + 1] + 113 * data_in[3 * (i * cols + j) + 2] ) /1024;
+        data_out[i * blockDim.x + j] = ( 307 * data_in[3* (bi * cols + bj)] + 604 * data_in[3 * (bi * cols + bj) + 1] + 113 * data_in[3 * (bi * cols + bj) + 2] ) /1024;
 }
 
 // Matrix de convolution 
