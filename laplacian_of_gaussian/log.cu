@@ -74,6 +74,8 @@ int main(int argc, char** argv)
 
         // On crée les informations de sorties 
         std::vector<unsigned char> out(rows * cols); 
+        // On crée les informations de sorties 
+        std::vector<unsigned char> image_gray(rows * cols); 
         // On crée l'image de sortie
         cv::Mat image_out(rows, cols, CV_8UC1, out.data());
 
@@ -116,6 +118,9 @@ int main(int argc, char** argv)
         std::cout << "Lancement du timer" << std::endl;
 
         grayscale<<< blocks , threads >>>(image_in_device, image_gray_device, cols, rows);
+
+        cudaMemcpy(image_gray, image_gray_device,  rows * cols, cudaMemcpyDeviceToHost );
+        cudaMemcpy(image_gray_device, image_gray,  rows * cols, cudaMemcpyHostToDevice );
         
         // lancement du programme
         laplacian_of_gaussian<<< blocks , threads >>>(image_gray_device, data_out_device, rows, cols);
