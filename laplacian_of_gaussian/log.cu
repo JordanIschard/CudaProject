@@ -55,36 +55,34 @@ int main(int argc, char** argv)
         // Récupère l'image
         Mat image_in = imread(argv[1], IMREAD_UNCHANGED);
         // Récupère les informations des pixels
-        unsigned char * data_in = image_in.data;
-        int rows = image_in.rows;
-        int cols = image_in.cols;
+        auto data_in = image_in.data;
+        auto rows = image_in.rows;
+        auto cols = image_in.cols;
 
 	
-	    printf("First data : %d %d %d\n",data_in[0],data_in[1],data_in[2]);
         cout << "rows = " << rows << " columns = " << cols << endl;
 
         // On crée les informations de sorties 
-        unsigned char * data_out = (unsigned char*)malloc((cols * rows)*sizeof(unsigned char)); 
+        vector<unsigned char> out(rows * cols); 
         // On crée l'image de sortie
-        Mat image_out(rows, cols, CV_8UC1, data_out);
+        Mat image_out(rows, cols, CV_8UC1, out.data());
 
         cout << "Image et données de sortie initialisées" << endl;
 
         // On copie l'image d'entrée sur le device
         unsigned char * image_in_device;
+        // On crée une copie des informations de sortie sur le device
+        unsigned char* data_out_device;
+
         cudaMalloc(&image_in_device, 3 * rows * cols);
+        cudaMalloc(&data_out_device, rows * cols);
     
         cout << "Image sur le device allouée" << endl;
+        cout << "Données de sortie sur le device allouées" << endl;
 
         cudaMemcpy(image_in_device, data_in, 3 * rows * cols, cudaMemcpyHostToDevice );
                                                                                     
         cout << "Image d'entrée mise sur le device" << endl;
-
-        // On crée une copie des informations de sortie sur le device
-        unsigned char* data_out_device;
-        cudaMalloc(&data_out_device, rows * cols);
-
-        cout << "Données de sortie misent sur le device" << endl;
 
         dim3 threads(32, 32 );
         dim3 blocks(( cols -1 ) / threads.x + 1 , ( rows - 1) / threads.y + 1);
@@ -113,7 +111,7 @@ int main(int argc, char** argv)
         }
 
         // On copie les informations de sortie du device vers le host
-        cudaMemcpy(data_out, data_out_device, rows * cols, cudaMemcpyDeviceToHost );
+        cudaMemcpy(out.data(), data_out_device, rows * cols, cudaMemcpyDeviceToHost );
         
         // On récupère le temps d'exécution
         cudaEventSynchronize(stop);
