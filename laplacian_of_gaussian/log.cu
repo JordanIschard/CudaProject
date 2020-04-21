@@ -59,7 +59,7 @@ int main(int argc, char** argv)
         auto rows = image_in.rows;
         auto cols = image_in.cols;
 
-	    printf("First data : %d %d %d",data_in[0],data_in[1],data_in[2]);
+	    printf("First data : %d %d %d\n",data_in[0],data_in[1],data_in[2]);
         cout << "rows = " << rows << " columns = " << cols << endl;
 
         // On crée les informations de sorties 
@@ -70,7 +70,7 @@ int main(int argc, char** argv)
         cout << "Image et données de sortie initialisées" << endl;
 
         // On copie l'image d'entrée sur le device
-        unsigned char* image_in_device;
+        unsigned char * image_in_device;
         cudaMalloc(&image_in_device, 3 * rows * cols);
     
         cout << "Image sur le device allouée" << endl;
