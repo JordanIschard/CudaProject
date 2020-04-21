@@ -75,7 +75,7 @@ int main(int argc, char** argv)
         // On crée les informations de sorties 
         std::vector<unsigned char> out(rows * cols); 
         // On crée les informations de sorties 
-        std::vector<unsigned char> image_gray(rows * cols); 
+        std::vector<unsigned char> out_gray(rows * cols); 
         // On crée l'image de sortie
         cv::Mat image_out(rows, cols, CV_8UC1, out.data());
 
