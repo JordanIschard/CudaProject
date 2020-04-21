@@ -24,7 +24,7 @@ __global__ void laplacian_of_gaussian(unsigned const char* data_in, unsigned cha
         result = data_in[3 * (i * cols + j)] * 16
 
         // Tous les pixels que l'on multiplie par -2
-        + ( data_in[3 * ((i-1) * cols + j)] + data_in[3 * ((i-+1) * cols + j)] + data_in[3 * (i * cols + (j-1))] + data_in[3 * (i * cols + (j+1))] ) * -2
+        + ( data_in[3 * ((i-1) * cols + j)] + data_in[3 * ((i+1) * cols + j)] + data_in[3 * (i * cols + (j-1))] + data_in[3 * (i * cols + (j+1))] ) * -2
 
         // Tous les pixels que l'on multiplie par -1
         + ( data_in[3 * ((i-2) * cols + j)] + data_in[3 * ((i+2) * cols + j)] + data_in[3 * (i * cols + (j-2))] + data_in[3 * (i * cols + (j+2))] 

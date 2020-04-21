@@ -106,13 +106,12 @@ int main(int argc, char** argv)
         
         auto stop = chrono::high_resolution_clock::now(); 
 
-        imshow("out.jpg",out);
+        imwrite("out.jpg",out);
 
         auto duration = chrono::duration_cast<chrono::microseconds>(stop - start); 
   
         cout << duration.count() << endl; 
 
-        waitKey(0);
     }
     
 
