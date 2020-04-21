@@ -119,8 +119,8 @@ int main(int argc, char** argv)
 
         grayscale<<< blocks , threads >>>(image_in_device, image_gray_device, rows, cols);
 
-        cudaMemcpy(image_gray.data(), image_gray_device,  rows * cols, cudaMemcpyDeviceToHost );
-        cudaMemcpy(image_gray_device, image_gray.data(),  rows * cols, cudaMemcpyHostToDevice );
+        //cudaMemcpy(image_gray.data(), image_gray_device,  rows * cols, cudaMemcpyDeviceToHost );
+        //cudaMemcpy(image_gray_device, image_gray.data(),  rows * cols, cudaMemcpyHostToDevice );
         
         // lancement du programme
         laplacian_of_gaussian<<< blocks , threads >>>(image_gray_device, data_out_device, rows, cols);
