@@ -117,13 +117,13 @@ int main(int argc, char** argv)
 
         std::cout << "Lancement du timer" << std::endl;
 
-        grayscale<<< blocks , threads >>>(image_in_device, image_gray_device, rows, cols);
+        grayscale<<< blocks , threads >>>(image_in_device, data_out_device, rows, cols);
 
         //cudaMemcpy(image_gray.data(), image_gray_device,  rows * cols, cudaMemcpyDeviceToHost );
         //cudaMemcpy(image_gray_device, image_gray.data(),  rows * cols, cudaMemcpyHostToDevice );
         
         // lancement du programme
-        laplacian_of_gaussian<<< blocks , threads >>>(image_gray_device, data_out_device, rows, cols);
+        //laplacian_of_gaussian<<< blocks , threads >>>(image_gray_device, data_out_device, rows, cols);
 
         // On arrête le timer
         cudaEventRecord(stop);
