@@ -12,13 +12,13 @@ using namespace std;
 // -1 -2 16 -2 -1
 //  0 -1 -2 -1  0
 //  0  0 -1  0  0
-__global__ void laplacian_of_gaussian(unsigned char* data_in, unsigned char* data_out, int rows, int cols)
+__global__ void laplacian_of_gaussian(unsigned const char* data_in, unsigned const char* data_out, size_t rows, size_t cols)
 {
     // On récupère les coordonnées du pixel
     auto i = blockIdx.x * blockDim.x + threadIdx.x;
     auto j = blockIdx.y * blockDim.y + threadIdx.y;
 
-    int result = 0;
+    auto result = 0;
 
     if( i >= 2 && i < (rows - 2) && j >= 2 && j < (cols - 2) )
     {
@@ -35,7 +35,7 @@ __global__ void laplacian_of_gaussian(unsigned char* data_in, unsigned char* dat
         result = result * result;
         result > 255*255 ? result = 255*255 : result;
 
-        data_out[ i * cols + j ] = sqrt(result);
+        data_out[ i * cols + j ] = sqrt((float)result);
     }
 }
 
