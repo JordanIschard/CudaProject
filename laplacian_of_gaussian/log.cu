@@ -53,7 +53,7 @@ int main(int argc, char** argv)
         // Récupère l'image
         Mat image_in = imread(argv[1], IMREAD_UNCHANGED);
         // Récupère les informations des pixels
-        auto data_in = image_in.data();
+        auto data_in = image_in.data;
         auto rows = image_in.rows;
         auto cols = image_in.cols;
 
@@ -66,7 +66,7 @@ int main(int argc, char** argv)
         // On copie l'image d'entrée sur le device
         unsigned char* image_in_device;
         cudaMalloc(&image_in_device, 3 * rows * cols);
-        cudaMemcpy(image_in_device, image_in, 3 * rows * cols, cudaMemcpyHostToDevice );
+        cudaMemcpy(image_in_device, data_in, 3 * rows * cols, cudaMemcpyHostToDevice );
 
         // On crée une copie des informations de sortie sur le device
         unsigned char* data_out_device;
