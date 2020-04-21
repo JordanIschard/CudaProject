@@ -56,12 +56,10 @@ int main(int argc, char** argv)
         Mat image_in = imread(argv[1], IMREAD_UNCHANGED);
         // Récupère les informations des pixels
         auto data_in = image_in.data;
-
-	imwrite("outTest.jpg",image_in);
         auto rows = image_in.rows;
         auto cols = image_in.cols;
 
-	cout << "First data : " <<  data_in[0] << " " << data_in[1] << " " << data_in[2] << endl;
+	    printf("First data : %d %d %d",data_in[0],data_in[1],data_in[2]);
         cout << "rows = " << rows << " columns = " << cols << endl;
 
         // On crée les informations de sorties 
