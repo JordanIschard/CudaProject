@@ -71,11 +71,11 @@ int main(int argc, char** argv)
 
         // On copie l'image d'entrée sur le device
         unsigned char * image_in_device;
-        cudaMalloc(&image_in_device, 3 * rows * cols);
+        cudaMalloc(&image_in_device, 3 * rows * cols * sizeof(unsigned char));
     
         cout << "Image sur le device allouée" << endl;
 
-        cudaMemcpy(image_in_device, data_in, 3 * rows * cols, cudaMemcpyHostToDevice );
+        cudaMemcpy(image_in_device, data_in, 3 * rows * cols * sizeof(unsigned char), cudaMemcpyHostToDevice );
                                                                                     
         cout << "image d'entrée mise sur le device" << endl;
 
