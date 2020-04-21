@@ -75,10 +75,13 @@ int main(int argc, char** argv)
         cudaMalloc(&image_in_device, 3 * rows * cols);
         cudaMalloc(&data_out_device, rows * cols);
     
+        if(image_in_device == nullptr){
+            std::cout << "You're fuck up" << std::endl;
+        }
         std::cout << "Image sur le device allouée" << std::endl;
         std::cout << "Données de sortie sur le device allouées" << std::endl;
 
-        cudaMemcpy(image_in_device, data_in,  rows * cols, cudaMemcpyHostToDevice );
+        cudaMemcpy(image_in_device, data_in,  3 * rows * cols, cudaMemcpyHostToDevice );
                                                                                     
         std::cout << "Image d'entrée mise sur le device" << std::endl;
 
