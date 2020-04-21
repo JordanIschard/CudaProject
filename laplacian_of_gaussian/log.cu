@@ -85,6 +85,9 @@ int main(int argc, char** argv)
         unsigned char * image_in_device;
         // On crée une copie des données d'entrée en noir et blanc
         unsigned char * out_gray_device;
+
+        // On crée une copie des données d'entrée en noir et blanc
+        unsigned char * image_gray_device;
         // On crée une copie des informations de sortie sur le device
         unsigned char* data_out_device;
 
