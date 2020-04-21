@@ -78,7 +78,7 @@ int main(int argc, char** argv)
         std::cout << "Image sur le device allouée" << std::endl;
         std::cout << "Données de sortie sur le device allouées" << std::endl;
 
-        cudaMemcpy(image_in_device, data_in, 3 * rows * cols, cudaMemcpyHostToDevice );
+        cudaMemcpy(image_in_device, data_in,  rows * cols, cudaMemcpyHostToDevice );
                                                                                     
         std::cout << "Image d'entrée mise sur le device" << std::endl;
 
