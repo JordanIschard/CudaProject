@@ -1,6 +1,8 @@
 #include <iostream>
 #include <opencv2/opencv.hpp> 
 #include <vector>
+#include <stdlib>
+#include <stdio>
 
 // Matrix de convolution 
 //
@@ -55,7 +57,7 @@ int main(int argc, char** argv)
         int threadSize = 32;
 
         if(argc == 3){
-            threadSize = (int)argv[2];
+            threadSize = atoi(argv[2]);
         }
 
         // Mesure de temps

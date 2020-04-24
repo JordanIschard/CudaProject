@@ -1,6 +1,8 @@
 #include <iostream>
 #include <opencv2/opencv.hpp> 
 #include <vector>
+#include <stdlib>
+#include <stdio>
 
 // Matrix de convolution 
 //
@@ -16,7 +18,7 @@ __global__ void laplacian_of_gaussian(unsigned const char* data_in, unsigned cha
     auto j = blockIdx.y * blockDim.y + threadIdx.y;
 
     if(i < rows && j < cols)
-        data_out[i * blockDim.x + j] = ( 307 * data_in[3* (bi * cols + bj)] + 604 * data_in[3 * (bi * cols + bj) + 1] + 113 * data_in[3 * (bi * cols + bj) + 2] ) /1024;
+        data_out[i * blockDim.x + j] = ( 307 * data_in[3* (i * cols + j)] + 604 * data_in[3 * (i * cols + j) + 1] + 113 * data_in[3 * (i * cols + j) + 2] ) /1024;
 
     __syncthreads();
 
@@ -50,7 +52,7 @@ int main(int argc, char** argv)
         int threadSize = 32;
 
         if(argc == 3){
-            threadSize = (int)argv[2];
+            threadSize = atoi(argv[2]);
         }
 
         // Mesure de temps
@@ -126,9 +128,9 @@ int main(int argc, char** argv)
         cudaEventSynchronize(stop);
         float milliseconds = 0;
         cudaEventElapsedTime(&milliseconds, start, stop);
-        printf("Execution time : %f",milliseconds);
+        printf("Execution time : %f\n",milliseconds);
 
-        cv::imwrite( "outCuda.jpg", image_out);
+        cv::imwrite( "out/outCudaV1.jpg", image_out);
 
         // On libère l'espace sur le device
         cudaFree(image_in_device);
