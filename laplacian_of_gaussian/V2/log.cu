@@ -11,20 +11,20 @@
 // -1 -2 16 -2 -1
 //  0 -1 -2 -1  0
 //  0  0 -1  0  0
-__global__ void laplacian_of_gaussian(unsigned char* data_in, unsigned char* const data_out, size_t rows, size_t cols)
+__global__ void laplacian_of_gaussian(unsigned char* data_in, unsigned char* data_out, size_t rows, size_t cols)
 {
     // On récupère les coordonnées du pixel
     auto i = blockIdx.x * blockDim.x + threadIdx.x;
     auto j = blockIdx.y * blockDim.y + threadIdx.y;
 
     if(i < rows && j < cols)
-        data_in[i * blockDim.x + j] = ( 307 * data_in[3* (i * cols + j)] + 604 * data_in[3 * (i * cols + j) + 1] + 113 * data_in[3 * (i * cols + j) + 2] ) /1024;
+        data_in[i * cols + j] = ( 307 * data_in[3* (i * cols + j)] + 604 * data_in[3 * (i * cols + j) + 1] + 113 * data_in[3 * (i * cols + j) + 2] ) /1024;
 
     __syncthreads();
 
     auto result = 0;
 
-    if( i > 2 && i < (rows - 2) && j >2 && j < (cols - 2) )
+    if( i >= 2 && i < (rows - 2) && j >= 2 && j < (cols - 2) )
     {
         // Tous les pixels que l'on multiplie par 16
         result = data_in[(i * cols + j)] * 16
