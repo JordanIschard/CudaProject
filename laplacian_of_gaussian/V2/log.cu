@@ -1,4 +1,4 @@
-#include <opencv2.opencv.hpp>
+#include <opencv2/opencv.hpp>
 #include <vector>
 
 __global__ void grayscale(unsigned char * data_rgb, unsigned char * data_gray, std::size_t cols, std::size_t rows)
@@ -15,7 +15,6 @@ __global__ void grayscale(unsigned char * data_rgb, unsigned char * data_gray, s
         ) / 1024;
     }
 }
-
 
 __global__ void laplacian_of_gaussian(unsigned char const * const data_gray, unsigned char * const data_out, std::size_t rows, std::size_t cols)
 {
