@@ -1,8 +1,8 @@
 #include <iostream>
 #include <opencv2/opencv.hpp> 
 #include <vector>
-#include <stdlib>
-#include <stdio>
+#include <stdlib.h>
+#include <stdio.h>
 
 // Matrix de convolution 
 //
