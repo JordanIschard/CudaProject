@@ -6,12 +6,12 @@ __global__ void grayscale(unsigned char * data_rgb, unsigned char * data_gray, s
     auto i = blockIdx.x * blockDim.x + threadIdx.x;
     auto j = blockIdx.y * blockDim.y + threadIdx.y;
 
-    if( j < cols && i < rows )
+    if( i < cols && j < rows )
     {
-        data_gray[ i * cols + j ] = ( 
-                307 * data_rgb[ 3 * (i * cols + j) ]
-            +   604 * data_rgb[ 3 * (i * cols + j) + 1 ]
-            +   113 * data_rgb[ 3 * (i * cols + j) + 2 ]
+        data_gray[ j * cols + i ] = ( 
+                307 * data_rgb[ 3 * (j * cols +1) ]
+            +   604 * data_rgb[ 3 * (j * cols +1) + 1 ]
+            +   113 * data_rgb[ 3 * (j * cols +1) + 2 ]
         ) / 1024;
     }
 }
@@ -22,22 +22,22 @@ __global__ void laplacian_of_gaussian(unsigned char const * const data_gray, uns
     auto j = blockIdx.y * blockDim.y + threadIdx.y;
 
 
-    if( j > 2 && j < (cols - 2) && i > 2 && i < (cols - 2))
+    if( i > 2 && i < (cols - 2) && j > 2 && j < (rows - 2))
     {
         // Tous les pixels que l'on multiplie par 16
-        auto result = data_gray[(i * cols + j)] * 16
+        auto result = data_gray[(j * cols + i)] * 16
 
         // Tous les pixels que l'on multiplie par -2
-        + ( data_gray[((i-1) * cols + j)] + data_gray[((i+1) * cols + j)] + data_gray[(i * cols + (j-1))] + data_gray[(i * cols + (j+1))] ) * -2
+        + ( data_gray[((j-1) * cols + i)] + data_gray[((j+1) * cols + i)] + data_gray[(j * cols + (i-1))] + data_gray[(j * cols + (i+1))] ) * -2
 
         // Tous les pixels que l'on multiplie par -1
-        + ( data_gray[((i-2) * cols + j)] + data_gray[((i+2) * cols + j)] + data_gray[(i * cols + (j-2))] + data_gray[(i * cols + (j+2))] 
-            + data_gray[((i-1) * cols + (j-1))] + data_gray[((i-1) * cols + (j+1))] + data_gray[((i+1) * cols + (j-1))] + data_gray[((i+1) * cols + (j+1))] ) * -1;
+        + ( data_gray[((j-2) * cols + i)] + data_gray[((j+2) * cols + i)] + data_gray[(j * cols + (i-2))] + data_gray[(j * cols + (i+2))] 
+            + data_gray[((j-1) * cols + (i-1))] + data_gray[((j-1) * cols + (i+1))] + data_gray[((j+1) * cols + (i-1))] + data_gray[((j+1) * cols + (i+1))] ) * -1;
 
 
         result = result * result;
         result = result > 255*255 ? result = 255*255 : result;
-        data_out[ i * cols + j ] = sqrt((float) result);
+        data_out[ j * cols + i ] = sqrt((float) result);
     }
 }
 
