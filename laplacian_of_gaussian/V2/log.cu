@@ -1,7 +1,7 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 
-__global__ void grayscale(unsigned char * data_rgb, unsigned char * data_gray, std::size_t cols, std::size_t rows)
+__global__ void grayscale(unsigned char * data_rgb, unsigned char * data_gray, std::size_t rows, std::size_t cols)
 {
     auto i = blockIdx.x * blockDim.x + threadIdx.x;
     auto j = blockIdx.y * blockDim.y + threadIdx.y;
