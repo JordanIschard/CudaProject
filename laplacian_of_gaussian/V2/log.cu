@@ -18,7 +18,7 @@ __global__ void laplacian_of_gaussian(unsigned const char* data_in, unsigned cha
     auto j = blockIdx.y * blockDim.y + threadIdx.y;
 
     if(i < rows && j < cols)
-        data_out[i * blockDim.x + j] = ( 307 * data_in[3* (i * cols + j)] + 604 * data_in[3 * (i * cols + j) + 1] + 113 * data_in[3 * (i * cols + j) + 2] ) /1024;
+        data_in[i * blockDim.x + j] = ( 307 * data_in[3* (i * cols + j)] + 604 * data_in[3 * (i * cols + j) + 1] + 113 * data_in[3 * (i * cols + j) + 2] ) /1024;
 
     __syncthreads();
 
