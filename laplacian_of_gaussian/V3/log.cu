@@ -31,17 +31,17 @@ __global__ void laplacian_of_gaussian(unsigned char* data_in, unsigned char* dat
 
     auto colsSH = blockDim.x;
 
-    if( i >= 2 && i < (rows - 2) && j >= 2 && j < (colsSH - 2) )
+    if( li >= 2 && li < (blockDim.x - 2) && lj >= 2 && lj < (blockDim.y - 2) )
     {
         // Tous les pixels que l'on multiplie par 16
-        result = sh[(i * colsSH + j)] * 16
+        result = sh[(li * colsSH + lj)] * 16
 
         // Tous les pixels que l'on multiplie par -2
-        + ( sh[((i-1) * colsSH + j)] + sh[((i+1) * colsSH + j)] + sh[(i * colsSH + (j-1))] + sh[(i * colsSH + (j+1))] ) * -2
+        + ( sh[((li-1) * colsSH + lj)] + sh[((li+1) * colsSH + lj)] + sh[(li * colsSH + (lj-1))] + sh[(li * colsSH + (lj+1))] ) * -2
 
         // Tous les pixels que l'on multiplie par -1
-        + ( sh[((i-2) * colsSH + j)] + sh[((i+2) * colsSH + j)] + sh[(i * colsSH + (j-2))] + sh[(i * colsSH + (j+2))] 
-            + sh[((i-1) * colsSH + (j-1))] + sh[((i-1) * colsSH + (j+1))] + sh[((i+1) * colsSH + (j-1))] + sh[((i+1) * colsSH + (j+1))] ) * -1;
+        + ( sh[((li-2) * colsSH + lj)] + sh[((li+2) * colsSH + lj)] + sh[(li * colsSH + (lj-2))] + sh[(li * colsSH + (lj+2))] 
+            + sh[((li-1) * colsSH + (lj-1))] + sh[((li-1) * colsSH + (lj+1))] + sh[((li+1) * colsSH + (lj-1))] + sh[((li+1) * colsSH + (lj+1))] ) * -1;
 
         result = result * result;
         result > 255*255 ? result = 255*255 : result;
