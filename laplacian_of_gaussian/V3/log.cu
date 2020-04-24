@@ -2,19 +2,6 @@
 #include <opencv2/opencv.hpp> 
 #include <vector>
 
-
-__global__ void grayscale(unsigned const char* data_in, unsigned char* const data_out, size_t rows, size_t cols)
-{
-    // On récupère les coordonnées du pixel
-    auto i = threadIdx.x;
-    auto j = threadIdx.y;
-    auto bi = blockIdx.x * blockDim.x + i;
-    auto bj = blockIdx.y * blockDim.y + j;
-
-    if(i < rows && j < cols)
-        data_out[i * blockDim.x + j] = ( 307 * data_in[3* (bi * cols + bj)] + 604 * data_in[3 * (bi * cols + bj) + 1] + 113 * data_in[3 * (bi * cols + bj) + 2] ) /1024;
-}
-
 // Matrix de convolution 
 //
 //  0  0 -1  0  0
@@ -24,23 +11,33 @@ __global__ void grayscale(unsigned const char* data_in, unsigned char* const dat
 //  0  0 -1  0  0
 __global__ void laplacian_of_gaussian(unsigned const char* data_in, unsigned char* const data_out, size_t rows, size_t cols)
 {
+    extern __shared__ unsigned char sh[];
+
     // On récupère les coordonnées du pixel
     auto i = blockIdx.x * blockDim.x + threadIdx.x;
     auto j = blockIdx.y * blockDim.y + threadIdx.y;
+
+    auto li = threadIdx.x;
+    auto lj = threadIdx.y;
+
+    if(i < rows && j < cols)
+        sh[li * blockDim.x + lj] = ( 307 * data_in[3* (bi * cols + bj)] + 604 * data_in[3 * (bi * cols + bj) + 1] + 113 * data_in[3 * (bi * cols + bj) + 2] ) /1024;
+
+    __syncthreads();
 
     auto result = 0;
 
     if( i >= 2 && i < (rows - 2) && j >= 2 && j < (cols - 2) )
     {
         // Tous les pixels que l'on multiplie par 16
-        result = data_in[(i * cols + j)] * 16
+        result = sh[(i * cols + j)] * 16
 
         // Tous les pixels que l'on multiplie par -2
-        + ( data_in[((i-1) * cols + j)] + data_in[((i+1) * cols + j)] + data_in[(i * cols + (j-1))] + data_in[(i * cols + (j+1))] ) * -2
+        + ( sh[((i-1) * cols + j)] + sh[((i+1) * cols + j)] + sh[(i * cols + (j-1))] + sh[(i * cols + (j+1))] ) * -2
 
         // Tous les pixels que l'on multiplie par -1
-        + ( data_in[((i-2) * cols + j)] + data_in[((i+2) * cols + j)] + data_in[(i * cols + (j-2))] + data_in[(i * cols + (j+2))] 
-            + data_in[((i-1) * cols + (j-1))] + data_in[((i-1) * cols + (j+1))] + data_in[((i+1) * cols + (j-1))] + data_in[((i+1) * cols + (j+1))] ) * -1;
+        + ( sh[((i-2) * cols + j)] + sh[((i+2) * cols + j)] + sh[(i * cols + (j-2))] + sh[(i * cols + (j+2))] 
+            + sh[((i-1) * cols + (j-1))] + sh[((i-1) * cols + (j+1))] + sh[((i+1) * cols + (j-1))] + sh[((i+1) * cols + (j+1))] ) * -1;
 
         result = result * result;
         result > 255*255 ? result = 255*255 : result;
@@ -53,7 +50,13 @@ int main(int argc, char** argv)
 {
     printf("Number of argument : %d\n", argc);
 
-    if(argc == 2){
+    if(argc >= 2){
+
+        int threadSize = 32;
+
+        if(argc == 3){
+            threadSize = (int)argv[2];
+        }
 
         // Mesure de temps
         cudaEvent_t start, stop;
@@ -84,15 +87,9 @@ int main(int argc, char** argv)
         // On crée une copie des informations de sortie sur le device
         unsigned char* data_out_device;
 
-        cudaMalloc(&image_in_device, rows * cols);
+        cudaMalloc(&image_in_device, 3 * rows * cols);
         cudaMalloc(&data_out_device, rows * cols);
-    
-	    auto err1 = cudaGetLastError();
-        if(err1 != cudaSuccess){
-            std::cout << "You're fuck up " << cudaGetErrorString(err1) << std::endl;
-        }else{
-	        std::cout << "kuvheuio" << std::endl;
-	    }
+
         std::cout << "Image sur le device allouée" << std::endl;
 
         std::cout << "Données de sortie sur le device allouées" << std::endl;
@@ -101,7 +98,7 @@ int main(int argc, char** argv)
                                                                                     
         std::cout << "Image d'entrée mise sur le device" << std::endl;
 
-        dim3 threads(32, 32 );
+        dim3 threads(threadSize, threadSize );
         dim3 blocks(( cols -1 ) / threads.x + 1 , ( rows - 1) / threads.y + 1);
 
         std::cout << "Nombre de threads = " << threads.x << "  " << threads.y << std::endl;
@@ -134,9 +131,9 @@ int main(int argc, char** argv)
         cudaEventSynchronize(stop);
         float milliseconds = 0;
         cudaEventElapsedTime(&milliseconds, start, stop);
-        printf("Execution time : %f",milliseconds);
+        printf("Execution time : %f\n",milliseconds);
 
-        cv::imwrite( "outCuda.jpg", image_out);
+        cv::imwrite( "out/outCudaV2.jpg", image_out);
 
         // On libère l'espace sur le device
         cudaFree(image_in_device);
