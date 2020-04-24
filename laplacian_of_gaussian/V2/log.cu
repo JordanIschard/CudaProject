@@ -24,7 +24,7 @@ __global__ void laplacian_of_gaussian(unsigned char* data_in, unsigned char* con
 
     auto result = 0;
 
-    if( i > 2 && i < (rows - 2) && j >=2 && j < (cols - 2) )
+    if( i > 2 && i < (rows - 2) && j >2 && j < (cols - 2) )
     {
         // Tous les pixels que l'on multiplie par 16
         result = data_in[(i * cols + j)] * 16
