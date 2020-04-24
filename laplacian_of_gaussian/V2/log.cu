@@ -132,7 +132,7 @@ int main(int argc, char** argv)
         cudaEventElapsedTime(&milliseconds, start, stop);
         printf("Execution time : %f\n",milliseconds);
 
-        cv::imwrite( "out/outCudaV1.jpg", image_out);
+        cv::imwrite( "outCudaV1.jpg", image_out);
 
         // On libère l'espace sur le device
         cudaFree(data_rgb_device);
