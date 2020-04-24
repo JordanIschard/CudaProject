@@ -84,7 +84,7 @@ int main(int argc, char** argv)
         unsigned char* data_out_device;
 
         cudaMalloc(&data_rgb_device, 3 * rows * cols);
-        cudaMalloc(&data_gray_device, rows * cols)
+        cudaMalloc(&data_gray_device, rows * cols);
         cudaMalloc(&data_out_device, rows * cols);
 
         std::cout << "Image sur le device allouée" << std::endl;
@@ -135,7 +135,8 @@ int main(int argc, char** argv)
         cv::imwrite( "out/outCudaV1.jpg", image_out);
 
         // On libère l'espace sur le device
-        cudaFree(image_in_device);
+        cudaFree(data_rgb_device);
+        cudaFree(data_gray_device);
         cudaFree(data_out_device);
     }
 
