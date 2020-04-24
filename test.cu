@@ -16,24 +16,22 @@ __global__ void grayscale(unsigned char * data_rgb, unsigned char * data_gray, s
     }
 }
 
-
 __global__ void laplacian_of_gaussian(unsigned char const * const data_gray, unsigned char * const data_out, std::size_t rows, std::size_t cols)
 {
     auto i = blockIdx.x * blockDim.x + threadIdx.x;
     auto j = blockIdx.y * blockDim.y + threadIdx.y;
 
-
     if( i > 2 && i < (cols - 2) && j > 2 && j < (cols - 2))
     {
         // Tous les pixels que l'on multiplie par 16
-        auto result = data_gray[(j * cols + i)] * 16
+        auto result = data_in[(j * cols + i)] * 16
 
         // Tous les pixels que l'on multiplie par -2
-        + ( data_gray[((j-1) * cols + i)] + data_gray[((j+1) * cols + i)] + data_gray[(j * cols + (i-1))] + data_gray[(j * cols + (i+1))] ) * -2
+        + ( data_in[((j-1) * cols + i)] + data_in[((j+1) * cols + i)] + data_in[(j * cols + (i-1))] + data_in[(j * cols + (i+1))] ) * -2
 
         // Tous les pixels que l'on multiplie par -1
-        + ( data_gray[((j-2) * cols + i)] + data_gray[((j+2) * cols + i)] + data_gray[(j * cols + (i-2))] + data_gray[(j * cols + (i+2))] 
-            + data_gray[((j-1) * cols + (i-1))] + data_gray[((j-1) * cols + (i+1))] + data_gray[((j+1) * cols + (i-1))] + data_gray[((j+1) * cols + (i+1))] ) * -1;
+        + ( data_in[((j-2) * cols + i)] + data_in[((j+2) * cols + i)] + data_in[(j * cols + (i-2))] + data_in[(j * cols + (i+2))] 
+            + data_in[((j-1) * cols + (i-1))] + data_in[((j-1) * cols + (i+1))] + data_in[((j+1) * cols + (i-1))] + data_in[((j+1) * cols + (i+1))] ) * -1;
 
 
         result = result * result;
