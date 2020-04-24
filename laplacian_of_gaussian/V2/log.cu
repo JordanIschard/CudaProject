@@ -11,7 +11,7 @@
 // -1 -2 16 -2 -1
 //  0 -1 -2 -1  0
 //  0  0 -1  0  0
-__global__ void laplacian_of_gaussian(unsigned const char* data_in, unsigned char* const data_out, size_t rows, size_t cols)
+__global__ void laplacian_of_gaussian(unsigned char* data_in, unsigned char* const data_out, size_t rows, size_t cols)
 {
     // On récupère les coordonnées du pixel
     auto i = blockIdx.x * blockDim.x + threadIdx.x;
