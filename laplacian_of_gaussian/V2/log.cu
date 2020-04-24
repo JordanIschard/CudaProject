@@ -22,6 +22,8 @@ __global__ void laplacian_of_gaussian(unsigned char* data_in, unsigned char* con
 
     __syncthreads();
 
+   std::cout << "coucou" << std::endl;
+
     auto result = 0;
 
     if( i >= 2 && i < (rows - 2) && j >= 2 && j < (cols - 2) )
