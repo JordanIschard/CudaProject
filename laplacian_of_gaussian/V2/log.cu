@@ -9,9 +9,9 @@ __global__ void grayscale(unsigned char * data_rgb, unsigned char * data_gray, s
     if( i < cols && j < rows )
     {
         data_gray[ j * cols + i ] = ( 
-                307 * data_rgb[ 3 * (j * cols +1) ]
-            +   604 * data_rgb[ 3 * (j * cols +1) + 1 ]
-            +   113 * data_rgb[ 3 * (j * cols +1) + 2 ]
+                307 * data_rgb[ 3 * (j * cols + i) ]
+            +   604 * data_rgb[ 3 * (j * cols + i) + 1 ]
+            +   113 * data_rgb[ 3 * (j * cols + i) + 2 ]
         ) / 1024;
     }
 }
