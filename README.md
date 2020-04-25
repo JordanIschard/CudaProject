@@ -18,7 +18,6 @@ Cette convolution utilise la matrice suivante :
 |-1 |-2 |16 |-2 |-1 |
 | 0 |-1 |-2 |-1 | 0 |
 | 0 | 0 |-1 | 0 | 0 |
-|   |   |   |   |   |
 
 Il est nécessaire d'effectuer un filtre **grayscale** sur l'image avant l'utilisation de cette convolution. D'où son rajout dans le programme. La première version va consister à effectuer cette convolution sur *CPU*, ensuite nous passerons sur *GPU* sans utilisation de mémoire partagée. Nous ajouterons la mémoire partagée pour voir le gain en temps d'exécution et enfin si nous avons le temps on utilisera les streams.
 
@@ -27,7 +26,7 @@ Il est nécessaire d'effectuer un filtre **grayscale** sur l'image avant l'utili
 Cette version va simplement effectuer un **grayscale** et ensuite la convolution désirée. Sur cette partie aucun problème n'a été remarqué.
 
 | Version | Nom de l'image | Dimensions | Temps d'exécution (millisecondes) |
-| :--: | :--: | :--: | :--: | :--: |
+| :--: | :--: | :--: | :--: |
 | *CPU* | `color_building.jpg` | 853 x 1280 | 28 |
 | *CPU* | `color_house.jpg` | 1920 x 1279 | 63 |
 
@@ -53,7 +52,7 @@ Afin d'avoir un meilleur gain, nous avons ajouter une mémoire partagée. Les do
 Un problème est survenu via l'utilisation de la mémoire partagée. En effet, les indices étant un peu modifié on avait un effet cadriage sur l'image de sortie.
 
 | Version | Nom de l'image | Dimensions | Nombre de threads | Temps d'exécution (millisecondes) | Gain sur la dernière version
-| :--: | :--: | :--: | :--: | :--: | :--: | :--: |
+| :--: | :--: | :--: | :--: | :--: | :--: |
 | *GPU V2* | `color_building.jpg` | 853 x 1280 | 16 x 16 | 0.28 | x1.43 |
 | *GPU V2* | `color_house.jpg` | 1920 x 1279 | 16 x 16 | 0.51 | x1.47 |
 | *GPU V2* | `color_building.jpg` | 853 x 1280 | 32 x 32 | 0.26 | x1.27 |
