@@ -4,8 +4,8 @@
 __global__ void laplacian_of_gaussian(unsigned char * data_rgb, unsigned char * const data_out, std::size_t rows, std::size_t cols)
 {
 
-    auto i = blockIdx.x * blockDim.x + threadIdx.x;
-    auto j = blockIdx.y * blockDim.y + threadIdx.y;
+    auto i = blockIdx.x * (blockDim.x - 2)+ threadIdx.x;
+    auto j = blockIdx.y * (blockDim.y -2) + threadIdx.y;
 
     auto gray_i = threadIdx.x;
     auto gray_j = threadIdx.y;
@@ -27,7 +27,7 @@ __global__ void laplacian_of_gaussian(unsigned char * data_rgb, unsigned char * 
     __syncthreads();
 
 
-    if( gray_i > 2 && gray_i < (cols_gray - 2) && gray_j > 2 && gray_j < (blockDim.y - 2))
+    if( gray_i > 1 && gray_i < (cols_gray - 2) && gray_j > 1 && gray_j < (blockDim.y - 2))
     {
         // Tous les pixels que l'on multiplie par 16
         auto result = data_gray[(gray_j * cols_gray + gray_i)] * 16
@@ -99,7 +99,7 @@ int main(int argc, char** argv)
         std::cout << "Image d'entrée mise sur le device" << std::endl;
 
         dim3 threads(threadSize, threadSize );
-        dim3 blocks(( cols -1 ) / (threads.x - 2) + 1 , ( rows - 1) / (threads.y - 2) + 1);
+        dim3 blocks(( cols -1 ) / (threads-2).x + 1 , ( rows - 1) / (threads.y-2) + 1);
 
         std::cout << "Nombre de threads = " << threads.x << "  " << threads.y << std::endl;
         std::cout << "Nombre de blocks = " << blocks.x << "  " << blocks.y << std::endl;
