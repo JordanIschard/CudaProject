@@ -30,14 +30,14 @@ __global__ void laplacian_of_gaussian(unsigned char * data_rgb, unsigned char * 
     if( gray_i > 2 && gray_i < (cols_gray - 2) && gray_j > 2 && gray_j < (blockDim.y - 2))
     {
         // Tous les pixels que l'on multiplie par 16
-        auto result = data_gray[(gray_j * cols + gray_i)] * 16
+        auto result = data_gray[(gray_j * cols_gray + gray_i)] * 16
 
         // Tous les pixels que l'on multiplie par -2
-        + ( data_gray[((gray_j-1) * cols + gray_i)] + data_gray[((gray_j+1) * cols + gray_i)] + data_gray[(gray_j * cols + (gray_i-1))] + data_gray[(gray_j * cols + (gray_i+1))] ) * -2
+        + ( data_gray[((gray_j-1) * cols_gray + gray_i)] + data_gray[((gray_j+1) * cols_gray + gray_i)] + data_gray[(gray_j * cols_gray + (gray_i-1))] + data_gray[(gray_j * cols_gray + (gray_i+1))] ) * -2
 
         // Tous les pixels que l'on multiplie par -1
-        + ( data_gray[((gray_j-2) * cols + gray_i)] + data_gray[((gray_j+2) * cols + gray_i)] + data_gray[(gray_j * cols + (gray_i-2))] + data_gray[(gray_j * cols + (gray_i+2))] 
-            + data_gray[((gray_j-1) * cols + (gray_i-1))] + data_gray[((gray_j-1) * cols + (gray_i+1))] + data_gray[((gray_j+1) * cols + (gray_i-1))] + data_gray[((gray_j+1) * cols + (gray_i+1))] ) * -1;
+        + ( data_gray[((gray_j-2) * cols_gray + gray_i)] + data_gray[((gray_j+2) * cols_gray + gray_i)] + data_gray[(gray_j * cols_gray + (gray_i-2))] + data_gray[(gray_j * cols_gray + (gray_i+2))] 
+            + data_gray[((gray_j-1) * cols_gray + (gray_i-1))] + data_gray[((gray_j-1) * cols_gray + (gray_i+1))] + data_gray[((gray_j+1) * cols_gray + (gray_i-1))] + data_gray[((gray_j+1) * cols_gray + (gray_i+1))] ) * -1;
 
 
         result = result * result;
