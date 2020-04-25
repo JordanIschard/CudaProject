@@ -45,24 +45,18 @@ Un autre point est le lien à faire entre **grayscale** et la convolution.
 
 | Version | Nom de l'image | Dimensions | Nombre de threads | Nombre de streams | Temps d'exécution (millisecondes) | Gain
 | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
-| *CPU* | `gray_building.jpg` | 1023 x 1024 | X | X | 41 | X |
-| *CPU* | `color_house.jpg` | 1920 x 1279 | X | X | 88 | X |
-| *GPU V1* | `gray_building.jpg` | 1023 x 1024 | 16 x 16 | X | ? | ? |
-| *GPU V1* | `color_house.jpg` | 1920 x 1279 | 16 x 16 | X | ? | ? |
-| *GPU V1* | `gray_building.jpg` | 1023 x 1024 | 32 x 32 | X | ? | ? |
-| *GPU V1* | `color_house.jpg` | 1920 x 1279 | 32 x 32 | X | ? | ? |
-| *GPU V1* | `gray_building.jpg` | 1023 x 1024 | 64 x 64 | X | ? | ? |
-| *GPU V1* | `color_house.jpg` | 1920 x 1279 | 64 x 64 | X | ? | ? |
-| *GPU V2* | `gray_building.jpg` | 1023 x 1024 | 16 x 16 | X | ? | ? |
+| *CPU* | `color_building.jpg` | 853 x 1280 | X | X | 28 | X |
+| *CPU* | `color_house.jpg` | 1920 x 1279 | X | X | 63 | X |
+| *GPU V1* | `color_building.jpg` | 853 x 1280 | 16 x 16 | X | 0.40 |  |
+| *GPU V1* | `color_house.jpg` | 1920 x 1279 | 16 x 16 | X | 0.75 |  |
+| *GPU V1* | `color_building.jpg` | 853 x 1280 | 32 x 32 | X | 0.33 |  |
+| *GPU V1* | `color_house.jpg` | 1920 x 1279 | 32 x 32 | X | 0.60 |  |
+| *GPU V2* | `color_building.jpg` | 853 x 1280 | 16 x 16 | X | ? | ? |
 | *GPU V2* | `color_house.jpg` | 1920 x 1279 | 16 x 16 | X | ? | ? |
-| *GPU V2* | `gray_building.jpg` | 1023 x 1024 | 32 x 32 | X | ? | ? |
+| *GPU V2* | `color_building.jpg` | 853 x 1280 | 32 x 32 | X | ? | ? |
 | *GPU V2* | `color_house.jpg` | 1920 x 1279 | 32 x 32 | X | ? | ? |
-| *GPU V2* | `gray_building.jpg` | 1023 x 1024 | 64 x 64 | X | ? | ? |
-| *GPU V2* | `color_house.jpg` | 1920 x 1279 | 64 x 64 | X | ? | ? |
-| *GPU V3* | `gray_building.jpg` | 1023 x 1024 | 16 x 16 | 2 | ? | ? |
+| *GPU V3* | `color_building.jpg` | 853 x 1280 | 16 x 16 | 2 | ? | ? |
 | *GPU V3* | `color_house.jpg` | 1920 x 1279 | 16 x 16 | 2 | ? | ? |
-| *GPU V3* | `gray_building.jpg` | 1023 x 1024 | 32 x 32 | 2 | ? | ? |
+| *GPU V3* | `color_building.jpg` | 853 x 1280 | 32 x 32 | 2 | ? | ? |
 | *GPU V3* | `color_house.jpg` | 1920 x 1279 | 32 x 32 | 2 | ? | ? |
-| *GPU V3* | `gray_building.jpg` | 1023 x 1024 | 64 x 64 | 2 | ? | ? |
-| *GPU V3* | `color_house.jpg` | 1920 x 1279 | 64 x 64 | 2 | ? | ? |
 
