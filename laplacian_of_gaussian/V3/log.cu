@@ -137,7 +137,6 @@ int main(int argc, char** argv)
 
         // On libère l'espace sur le device
         cudaFree(data_rgb_device);
-        cudaFree(data_gray_device);
         cudaFree(data_out_device);
     }
 
