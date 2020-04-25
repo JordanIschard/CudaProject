@@ -99,7 +99,7 @@ int main(int argc, char** argv)
         std::cout << "Image d'entrée mise sur le device" << std::endl;
 
         dim3 threads(threadSize, threadSize );
-        dim3 blocks(( cols -1 ) / (threads-2).x + 1 , ( rows - 1) / (threads.y-2) + 1);
+        dim3 blocks(( cols -1 ) / (threads.x-2) + 1 , ( rows - 1) / (threads.y-2) + 1);
 
         std::cout << "Nombre de threads = " << threads.x << "  " << threads.y << std::endl;
         std::cout << "Nombre de blocks = " << blocks.x << "  " << blocks.y << std::endl;
