@@ -26,7 +26,7 @@ __global__ void laplacian_of_gaussian(unsigned char * data_rgb, unsigned char * 
     __syncthreads();
 
 
-    /*if( gray_i > 1 && gray_i < (cols_gray - 2) && gray_j > 1 && gray_j < (blockDim.y - 2))
+    if( gray_i > 1 && gray_i < (cols_gray - 2) && gray_j > 1 && gray_j < (blockDim.y - 2))
     {
         // Tous les pixels que l'on multiplie par 16
         auto result = data_gray[(gray_j * cols_gray + gray_i)] * 16
@@ -42,8 +42,7 @@ __global__ void laplacian_of_gaussian(unsigned char * data_rgb, unsigned char * 
         result = result * result;
         result = result > 255*255 ? result = 255*255 : result;
         data_out[ j * cols + i ] = sqrt((float) result);
-    }*/
-    data_out[ j * cols + i ] = data_gray[ gray_j * cols_gray + gray_i];
+    }
 }
 
 int main(int argc, char** argv)
