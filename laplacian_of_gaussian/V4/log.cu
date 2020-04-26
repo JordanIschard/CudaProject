@@ -52,7 +52,7 @@ int main(int argc, char** argv)
         cudaError_t err;
 
         int threadSize = 32;
-        int streamsNumber = 4;
+        int streamsNumber = 2;
 
         if(argc == 3){
             threadSize = atoi(argv[2]);
@@ -71,8 +71,8 @@ int main(int argc, char** argv)
         auto data_rgb = image_in.data;
         auto rows = image_in.rows;
         auto cols = image_in.cols;
-        auto size_data_in = rows * cols * 3;
-        auto size_data_out = rows * cols;
+        auto size_data_in = (rows * cols * 3) / streamsNumber;
+        auto size_data_out = (rows * cols) / streamsNumber;
 
         unsigned char ** data_in_streams; 
 
@@ -81,7 +81,7 @@ int main(int argc, char** argv)
         if( err != cudaSuccess ) { std::cerr << "Erreur malloc data_in_streams" << std::endl; } 
 
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
-            err = cudaMalloc(&data_in_streams[i], size_data_in / streamsNumber);
+            err = cudaMalloc(&data_in_streams[i], size_data_in);
             if( err != cudaSuccess ) { std::cerr << "Erreur malloc data_in_streams[" << i << "]" << std::endl; } 
         }
 
@@ -92,14 +92,14 @@ int main(int argc, char** argv)
         if( err != cudaSuccess ) { std::cerr << "Erreur malloc data_out_streams" << std::endl; } 
 
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
-            err = cudaMalloc(&data_out_streams[i], size_data_out / streamsNumber);
+            err = cudaMalloc(&data_out_streams[i], size_data_out);
             if( err != cudaSuccess ) { std::cerr << "Erreur malloc data_out_streams[" << i << "]" << std::endl; } 
         }
 
         std::cout << "rows = " << rows << " columns = " << cols << std::endl;
 
         // On crée les informations de sorties 
-        std::vector<unsigned char> out(size_data_out); 
+        std::vector<unsigned char> out(rows * cols); 
         // On crée l'image de sortie
         cv::Mat image_out(rows, cols, CV_8UC1, out.data());
 
@@ -116,7 +116,7 @@ int main(int argc, char** argv)
         }
 
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
-            cudaMemcpyAsync( data_in_streams[i], data_rgb + i * (size_data_in / streamsNumber), size_data_in / streamsNumber, cudaMemcpyHostToDevice, streams[i]);
+            cudaMemcpyAsync( data_in_streams[i], data_rgb + i * size_data_in, size_data_in, cudaMemcpyHostToDevice, streams[i]);
         }
                                                                     
         std::cout << "Image d'entrée mise sur le device" << std::endl;
@@ -151,7 +151,7 @@ int main(int argc, char** argv)
         }
 
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
-            cudaMemcpyAsync( out.data() + i * (size_data_out / streamsNumber), data_out_streams[i], size_data_out / streamsNumber, cudaMemcpyDeviceToHost, streams[i]);
+            cudaMemcpyAsync( out.data() + i * size_data_out, data_out_streams[i], size_data_out, cudaMemcpyDeviceToHost, streams[i]);
         }
         
         // On récupère le temps d'exécution
