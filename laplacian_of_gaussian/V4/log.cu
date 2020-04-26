@@ -7,7 +7,7 @@ __global__ void laplacian_of_gaussian(unsigned char * data_rgb, unsigned char * 
     auto j = blockIdx.y * (blockDim.y - 4) + threadIdx.y + start;
 
     auto gray_i = threadIdx.x;
-    auto gray_j = threadIdx.y + start;
+    auto gray_j = threadIdx.y;
 
     extern __shared__ unsigned char data_gray[];
 
