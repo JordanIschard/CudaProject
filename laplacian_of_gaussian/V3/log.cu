@@ -14,7 +14,7 @@ __global__ void laplacian_of_gaussian(unsigned char * data_rgb, unsigned char * 
 
     auto cols_gray = blockDim.x;
 
-    if( i < cols && j < rows )
+    if( i >= 0 && i < cols && j >= 0 && j < rows )
     {
         data_gray[ gray_j * cols_gray + gray_i ] = ( 
                 307 * data_rgb[ 3 * (j * cols + i) ]
