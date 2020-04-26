@@ -52,7 +52,7 @@ int main(int argc, char** argv)
         cudaError_t err;
 
         int threadSize = 32;
-        int streamsNumber = 2;
+        int streamsNumber = 4;
 
         if(argc == 3){
             threadSize = atoi(argv[2]);
