@@ -116,7 +116,7 @@ int main(int argc, char** argv)
         }
 
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
-            cudaMemcpyAsync( data_in_streams[i], data_rgb + i * (size_data_in) / streamsNumber), size_data_in / streamsNumber, cudaMemcpyHostToDevice, streams[i]);
+            cudaMemcpyAsync( data_in_streams[i], data_rgb + i * (size_data_in / streamsNumber), size_data_in / streamsNumber, cudaMemcpyHostToDevice, streams[i]);
         }
                                                                     
         std::cout << "Image d'entrée mise sur le device" << std::endl;
@@ -151,7 +151,7 @@ int main(int argc, char** argv)
         }
 
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
-            cudaMemcpyAsync( out.data() + i * size_data_out / streamsNumber), data_out_streams[i], size_data_out / streamsNumber, cudaMemcpyDeviceToHost, streams[i]);
+            cudaMemcpyAsync( out.data() + i * (size_data_out / streamsNumber), data_out_streams[i], size_data_out / streamsNumber, cudaMemcpyDeviceToHost, streams[i]);
         }
         
         // On récupère le temps d'exécution
