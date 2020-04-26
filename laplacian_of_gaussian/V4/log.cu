@@ -71,12 +71,13 @@ int main(int argc, char** argv)
         auto data_rgb = image_in.data;
         auto rows = image_in.rows;
         auto cols = image_in.cols;
-        if(streamsNumber == 2){
-            auto size_data_in = (rows / streamsNumber) * cols * 3;
-            auto size_data_out = (rows / streamsNumber) * cols;
-        }else{
-            auto size_data_in = (rows / (streamsNumber / 2)) * (cols / (streamsNumber / 2)) * 3;
-            auto size_data_out = (rows / (streamsNumber / 2)) * (cols / (streamsNumber / 2));
+
+
+        auto size_data_in = (rows / streamsNumber) * cols * 3;
+        auto size_data_out = (rows / streamsNumber) * cols;
+        if(streamsNumber > 2){
+            size_data_in = (rows / (streamsNumber / 2)) * (cols / (streamsNumber / 2)) * 3;
+            size_data_out = (rows / (streamsNumber / 2)) * (cols / (streamsNumber / 2));
         }
             
 
