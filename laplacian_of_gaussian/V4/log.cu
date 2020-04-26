@@ -1,13 +1,13 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 
-__global__ void laplacian_of_gaussian(unsigned char * data_rgb, unsigned char * const data_out, std::size_t rows, std::size_t cols)
+__global__ void laplacian_of_gaussian(unsigned char * data_rgb, unsigned char * const data_out, std::size_t start, std::size_t rows, std::size_t cols)
 {
     auto i = blockIdx.x * (blockDim.x - 4)+ threadIdx.x;
-    auto j = blockIdx.y * (blockDim.y - 4) + threadIdx.y;
+    auto j = blockIdx.y * (blockDim.y - 4) + threadIdx.y + start;
 
     auto gray_i = threadIdx.x;
-    auto gray_j = threadIdx.y;
+    auto gray_j = threadIdx.y + start;
 
     extern __shared__ unsigned char data_gray[];
 
@@ -144,7 +144,7 @@ int main(int argc, char** argv)
         std::cout << "Fin du timer" << std::endl;
 
         cudaDeviceSynchronize();
-        auto err = cudaGetLastError();
+        err = cudaGetLastError();
         if( err != cudaSuccess )
         {
             printf("Errors found :\n %s", cudaGetErrorString(err));
