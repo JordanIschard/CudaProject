@@ -3,20 +3,17 @@
 
 __global__ void laplacian_of_gaussian(unsigned char * data_rgb, unsigned char * const data_out, std::size_t rows, std::size_t cols)
 {
-    auto ti = blockIdx.x * (blockDim.x)+ threadIdx.x;
-    auto tj = blockIdx.y * (blockDim.y) + threadIdx.y;
-
     auto i = blockIdx.x * (blockDim.x - 4)+ threadIdx.x;
     auto j = blockIdx.y * (blockDim.y - 4) + threadIdx.y;
 
-    auto gray_i = threadIdx.x;
-    auto gray_j = threadIdx.y;
+    auto gray_i = threadIdx.x+1;
+    auto gray_j = threadIdx.y+1;
 
     extern __shared__ unsigned char data_gray[];
 
     auto cols_gray = blockDim.x;
 
-    if( ti < cols && tj < rows )
+    if( i < cols && j < rows )
     {
         data_gray[ gray_j * cols_gray + gray_i ] = ( 
                 307 * data_rgb[ 3 * (j * cols + i) ]
