@@ -141,7 +141,7 @@ int main(int argc, char** argv)
         
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
             // lancement du programme
-            laplacian_of_gaussian<<< blocks , threads , threadSize * threadSize, streams[i]>>>(data_in_streams[i], data_out_streams[i], rows, cols);
+            laplacian_of_gaussian<<< blocks , threads , threadSize * threadSize, streams[i]>>>(data_in_streams[i], data_out_streams[i], rows / 2, cols);
         }
 
         
