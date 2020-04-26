@@ -77,22 +77,22 @@ int main(int argc, char** argv)
         unsigned char ** data_in_streams; 
 
 
-        err = cudaMallocHost(&data_in_streams, streamsNumber)
+        err = cudaMallocHost(&data_in_streams, streamsNumber);
         if( err != cudaSuccess ) { std::cerr << "Erreur malloc data_in_streams" << std::endl; } 
 
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
-            err = cudaMalloc(&data_in_streams[i], size_data_in / streamsNumber)
+            err = cudaMalloc(&data_in_streams[i], size_data_in / streamsNumber);
             if( err != cudaSuccess ) { std::cerr << "Erreur malloc data_in_streams[" << i << "]" << std::endl; } 
         }
 
         unsigned char ** data_out_streams; 
 
 
-        err = cudaMallocHost(&data_out_streams, streamsNumber)
+        err = cudaMallocHost(&data_out_streams, streamsNumber);
         if( err != cudaSuccess ) { std::cerr << "Erreur malloc data_out_streams" << std::endl; } 
 
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
-            err = cudaMalloc(&data_out_streams[i], size_data_out / streamsNumber)
+            err = cudaMalloc(&data_out_streams[i], size_data_out / streamsNumber);
             if( err != cudaSuccess ) { std::cerr << "Erreur malloc data_out_streams[" << i << "]" << std::endl; } 
         }
 
