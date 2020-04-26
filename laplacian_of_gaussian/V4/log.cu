@@ -1,10 +1,10 @@
 #include <opencv2/opencv.hpp>
 #include <vector>
 
-__global__ void laplacian_of_gaussian(unsigned char * data_rgb, unsigned char * const data_out, std::size_t start, std::size_t rows, std::size_t cols)
+__global__ void laplacian_of_gaussian(unsigned char * data_rgb, unsigned char * const data_out, std::size_t rows, std::size_t cols)
 {
     auto i = blockIdx.x * (blockDim.x - 4)+ threadIdx.x;
-    auto j = blockIdx.y * (blockDim.y - 4) + threadIdx.y + start;
+    auto j = blockIdx.y * (blockDim.y - 4) + threadIdx.y;
 
     auto gray_i = threadIdx.x;
     auto gray_j = threadIdx.y;
@@ -134,7 +134,7 @@ int main(int argc, char** argv)
         
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
             // lancement du programme
-            laplacian_of_gaussian<<< blocks , threads , threadSize * threadSize, streams[i]>>>(data_in_streams[i], data_out_streams[i], i * (size_data_in) / streamsNumber, rows, cols);
+            laplacian_of_gaussian<<< blocks , threads , threadSize * threadSize, streams[i]>>>(data_in_streams[i], data_out_streams[i], rows, cols);
         }
 
         
