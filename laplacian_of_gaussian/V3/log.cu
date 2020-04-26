@@ -4,7 +4,7 @@
 __global__ void laplacian_of_gaussian(unsigned char * data_rgb, unsigned char * const data_out, std::size_t rows, std::size_t cols)
 {
 
-    auto i = blockIdx.x * (blockDim.x - 3)+ threadIdx.x;
+    auto i = blockIdx.x * (blockDim.x - 4)+ threadIdx.x;
     auto j = blockIdx.y * (blockDim.y - 4) + threadIdx.y;
 
     auto gray_i = threadIdx.x;
@@ -14,14 +14,14 @@ __global__ void laplacian_of_gaussian(unsigned char * data_rgb, unsigned char * 
 
     auto cols_gray = blockDim.x;
 
-    if( i < cols && j < rows )
-    {
+    //if( i < cols && j < rows )
+    //{
         data_gray[ gray_j * cols_gray + gray_i ] = ( 
                 307 * data_rgb[ 3 * (j * cols + i) ]
             +   604 * data_rgb[ 3 * (j * cols + i) + 1 ]
             +   113 * data_rgb[ 3 * (j * cols + i) + 2 ]
         ) / 1024;
-    }
+    //}
 
     __syncthreads();
 
