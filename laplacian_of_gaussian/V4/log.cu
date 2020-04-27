@@ -151,7 +151,7 @@ int main(int argc, char** argv)
         }*/
 
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
-            cudaMemcpyAsync( out.data() + i * size_data_out, data_out_streams[i], size_data_out, cudaMemcpyDeviceToHost, streams[i]);
+            cudaMemcpyAsync( out.data() + i * size_data_out + 4 * (streamsNumber-(i+1)), data_out_streams[i], size_data_out, cudaMemcpyDeviceToHost, streams[i]);
         }
         
         // On récupère le temps d'exécution
