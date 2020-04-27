@@ -49,7 +49,7 @@ Cette partie m'a bloqué sur un point que je ne pensais pas compliqués. Lorsque
 
 Afin d'avoir un meilleur gain, nous avons ajouter une mémoire partagée. Les données de l'image initiale sont convertie pour donner une image en noir et blanc. Dans la version précédente on perdait du temps à récupérer les données intermédiaire. Pour palier à cela on mais les données en noir et blanc dans la mémoire partagée.
 
-Un problème est survenu via l'utilisation de la mémoire partagée. En effet, les indices étant un peu modifié on avait un effet cadriage sur l'image de sortie. Il reste un artéfact à gauche de l'image.
+Un problème est survenu via l'utilisation de la mémoire partagée. En effet, les indices étant un peu modifié on avait un effet cadriage sur l'image de sortie.
 
 | Version | Nom de l'image | Dimensions | Nombre de threads | Temps d'exécution (millisecondes) | Gain sur la dernière version
 | :--: | :--: | :--: | :--: | :--: | :--: |
@@ -62,10 +62,10 @@ Un problème est survenu via l'utilisation de la mémoire partagée. En effet, l
 
 | Version | Nom de l'image | Dimensions | Nombre de threads | Nombre de streams | Temps d'exécution (millisecondes) | Gain sur la dernière version
 | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
-| *GPU V3* | `color_building.jpg` | 853 x 1280 | 16 x 16 | 2 | ? | ? |
-| *GPU V3* | `color_house.jpg` | 1920 x 1279 | 16 x 16 | 2 | ? | ? |
-| *GPU V3* | `color_building.jpg` | 853 x 1280 | 32 x 32 | 2 | ? | ? |
-| *GPU V3* | `color_house.jpg` | 1920 x 1279 | 32 x 32 | 2 | ? | ? |
+| *GPU V3* | `color_building.jpg` | 853 x 1280 | 16 x 16 | 2 | 0.27 | ? |
+| *GPU V3* | `color_house.jpg` | 1920 x 1279 | 16 x 16 | 2 | 0.55 | ? |
+| *GPU V3* | `color_building.jpg` | 853 x 1280 | 32 x 32 | 2 | 0.26 | x1 |
+| *GPU V3* | `color_house.jpg` | 1920 x 1279 | 32 x 32 | 2 | 0.51 | ? |
 
 ### Résumé des résultats
 

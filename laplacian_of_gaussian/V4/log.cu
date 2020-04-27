@@ -63,7 +63,7 @@ int main(int argc, char** argv)
         cudaEventCreate(&start);
         cudaEventCreate(&stop);
 
-        std::cout << "Création du timer faite" << std::endl;
+        //std::cout << "Création du timer faite" << std::endl;
 
         // Récupère l'image
         cv::Mat image_in = cv::imread(argv[1], cv::IMREAD_UNCHANGED);
@@ -78,36 +78,36 @@ int main(int argc, char** argv)
 
 
         err = cudaMallocHost(&data_in_streams, streamsNumber);
-        if( err != cudaSuccess ) { std::cerr << "Erreur malloc data_in_streams" << std::endl; } 
+        //if( err != cudaSuccess ) { std::cerr << "Erreur malloc data_in_streams" << std::endl; } 
 
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
             err = cudaMalloc(&data_in_streams[i], size_data_in);
-            if( err != cudaSuccess ) { std::cerr << "Erreur malloc data_in_streams[" << i << "]" << std::endl; } 
+            //if( err != cudaSuccess ) { std::cerr << "Erreur malloc data_in_streams[" << i << "]" << std::endl; } 
         }
 
         unsigned char ** data_out_streams; 
 
 
         err = cudaMallocHost(&data_out_streams, streamsNumber);
-        if( err != cudaSuccess ) { std::cerr << "Erreur malloc data_out_streams" << std::endl; } 
+        //if( err != cudaSuccess ) { std::cerr << "Erreur malloc data_out_streams" << std::endl; } 
 
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
             err = cudaMalloc(&data_out_streams[i], size_data_out);
-            if( err != cudaSuccess ) { std::cerr << "Erreur malloc data_out_streams[" << i << "]" << std::endl; } 
+            //if( err != cudaSuccess ) { std::cerr << "Erreur malloc data_out_streams[" << i << "]" << std::endl; } 
         }
 
-        std::cout << "rows = " << rows << " columns = " << cols << std::endl;
+        //std::cout << "rows = " << rows << " columns = " << cols << std::endl;
 
         // On crée les informations de sorties 
         std::vector<unsigned char> out(rows * cols); 
         // On crée l'image de sortie
         cv::Mat image_out(rows, cols, CV_8UC1, out.data());
 
-        std::cout << "Image et données de sortie initialisées" << std::endl;
+        //std::cout << "Image et données de sortie initialisées" << std::endl;
 
-        std::cout << "Image sur le device allouée" << std::endl;
+        //std::cout << "Image sur le device allouée" << std::endl;
 
-        std::cout << "Données de sortie sur le device allouées" << std::endl;
+        //std::cout << "Données de sortie sur le device allouées" << std::endl;
 
         cudaStream_t streams[ streamsNumber ];
 
@@ -116,21 +116,21 @@ int main(int argc, char** argv)
         }
 
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
-            cudaMemcpyAsync( data_in_streams[i], data_rgb + i * size_data_in + 2, size_data_in, cudaMemcpyHostToDevice, streams[i]);
+            cudaMemcpyAsync( data_in_streams[i], data_rgb + i * size_data_in, size_data_in, cudaMemcpyHostToDevice, streams[i]);
         }
                                                                     
-        std::cout << "Image d'entrée mise sur le device" << std::endl;
+        //std::cout << "Image d'entrée mise sur le device" << std::endl;
 
         dim3 threads(threadSize, threadSize );
         dim3 blocks((( cols -1 ) / (threads.x-4)) + 1 , (( rows - 1) / (threads.y-4)) / streamsNumber + 1);
 
-        std::cout << "Nombre de threads = " << threads.x << "  " << threads.y << std::endl;
-        std::cout << "Nombre de blocks = " << blocks.x << "  " << blocks.y << std::endl;
+        //std::cout << "Nombre de threads = " << threads.x << "  " << threads.y << std::endl;
+        //std::cout << "Nombre de blocks = " << blocks.x << "  " << blocks.y << std::endl;
 
         // Lancement du timer
         cudaEventRecord(start);
 
-        std::cout << "Lancement du timer" << std::endl;
+        //std::cout << "Lancement du timer" << std::endl;
         
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
             // lancement du programme
@@ -141,14 +141,14 @@ int main(int argc, char** argv)
         // On arrête le timer
         cudaEventRecord(stop);
 
-        std::cout << "Fin du timer" << std::endl;
+        //std::cout << "Fin du timer" << std::endl;
 
         cudaDeviceSynchronize();
         err = cudaGetLastError();
-        if( err != cudaSuccess )
+        /*if( err != cudaSuccess )
         {
             printf("Errors found :\n %s", cudaGetErrorString(err));
-        }
+        }*/
 
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
             cudaMemcpyAsync( out.data() + i * size_data_out, data_out_streams[i], size_data_out, cudaMemcpyDeviceToHost, streams[i]);

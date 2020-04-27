@@ -103,7 +103,7 @@ void laplacian_of_gaussian(unsigned char* in_data, unsigned char* out_data, int 
 
 int main(int argc, char** argv)
 {
-    printf("Number of argument : %d\n", argc);
+    //printf("Number of argument : %d\n", argc);
 
     if(argc == 2){
         Mat image = imread(argv[1]);
