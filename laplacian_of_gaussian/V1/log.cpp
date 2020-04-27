@@ -5,7 +5,16 @@
 using namespace cv;
 using namespace std;
 
-// Coloration en noir et blanc
+/** 
+ * À partir d'une image en couleur, on crée une réplique
+ *  en noir et blanc
+ * 
+ * @param data_in les données de l'image d'entrée
+ * @param rows le nombre de lignes de l'image
+ * @param cols le nombre de colonnes de l'image
+ * 
+ * @param data_out les données de la réplique en noir et blanc de l'image originelle
+ */ 
 void grayscale(unsigned char* data_in, unsigned char* data_out, int rows, int cols)
 {
     for (int i = 0; i < rows; ++i)
@@ -17,14 +26,23 @@ void grayscale(unsigned char* data_in, unsigned char* data_out, int rows, int co
     }
 }
 
-// Matrix de convolution 
-//
-//  0  0 -1  0  0
-//  0 -1 -2 -1  0
-// -1 -2 16 -2 -1
-//  0 -1 -2 -1  0
-//  0  0 -1  0  0
-void laplacian_of_gaussian_bis(unsigned char* data_in, unsigned char* data_out, int rows, int cols)
+/** 
+ * Applique la matrice de convolution ci-dessous sur chaque pixel
+ * de l'image en noir et blanc d'entrée
+ *
+ *  0  0 -1  0  0
+ *  0 -1 -2 -1  0 
+ * -1 -2 16 -2 -1
+ *  0 -1 -2 -1  0 
+ *  0  0 -1  0  0
+ * 
+ * @param data_in les données de l'image d'entrée
+ * @param rows le nombre de lignes de l'image
+ * @param cols le nombre de colonnes de l'image
+ * 
+ * @param data_out les données de la réplique, avec la convolution appliquée, de l'image originelle
+ */
+void laplacian_of_gaussian(unsigned char* data_in, unsigned char* data_out, int rows, int cols)
 {
 
     int result;
@@ -55,52 +73,6 @@ void laplacian_of_gaussian_bis(unsigned char* data_in, unsigned char* data_out, 
     }
 }
 
-void laplacian_of_gaussian(unsigned char* in_data, unsigned char* out_data, int rows, int cols)
-{
-    
-    for (int i = 0; i < rows; ++i)
-        {
-            for (int j = 0; j < cols; ++j)
-            {
-                int c = 0;
-                for (int shift_row = i-2; shift_row <= i+2; shift_row++)
-                {
-                    for (int shift_col = j-2; shift_col <= j+2; shift_col++)
-                    {
-                        if(0 <= shift_col && shift_col < cols && 0 <= shift_row && shift_row < rows)
-                        {
-                            if(shift_col == j && shift_row == i)
-                            {
-                                c += in_data[(shift_row * cols + shift_col)] * 16;         
-                            }
-                            else
-                            {
-                                if((shift_col == j && (shift_row == i-1 || shift_row == i+1)) 
-                                || (shift_row == i && (shift_col == j-1 || shift_col == j+1)))
-                                {
-                                    c += in_data[(shift_row * cols + shift_col)] * -2;   
-                                }
-                                else
-                                {
-                                    if(((shift_row == i-1 || shift_row == i+1) && (shift_col == j-1 || shift_col == j+1))
-                                    || (shift_col == j && (shift_row == i-2 || shift_row == i+2))
-                                    || (shift_row == i && (shift_col == j-2 || shift_col == j+2)))
-                                    {
-                                        c += in_data[(shift_row * cols + shift_col)] * -1;
-                                    }   
-                                }
-                            }               
-                        }
-                    }
-                }
-                c = c*c;
-                c > 255*255 ? c = 255*255 : c;
-
-                out_data[ i * cols + j ] = sqrt(c);
-            }
-        }
-}
-
 int main(int argc, char** argv)
 {
     //printf("Number of argument : %d\n", argc);
@@ -117,7 +89,7 @@ int main(int argc, char** argv)
         auto start = chrono::high_resolution_clock::now(); 
 
         grayscale(image.data,tmp,image.rows,image.cols);
-        laplacian_of_gaussian_bis(tmp,data_out,image.rows,image.cols);
+        laplacian_of_gaussian(tmp,data_out,image.rows,image.cols);
         
         auto stop = chrono::high_resolution_clock::now(); 
 

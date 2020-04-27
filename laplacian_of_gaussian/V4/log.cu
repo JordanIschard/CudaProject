@@ -116,7 +116,7 @@ int main(int argc, char** argv)
         }
 
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
-            cudaMemcpyAsync( data_in_streams[i], data_rgb + i * size_data_in, size_data_in, cudaMemcpyHostToDevice, streams[i]);
+            cudaMemcpyAsync( data_in_streams[i], data_rgb + i * size_data_in + 4 * i, size_data_in, cudaMemcpyHostToDevice, streams[i]);
         }
                                                                     
         //std::cout << "Image d'entrée mise sur le device" << std::endl;

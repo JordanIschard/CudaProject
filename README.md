@@ -40,10 +40,10 @@ Cette partie m'a bloqué sur un point que je ne pensais pas compliqués. Lorsque
 
 | Version | Nom de l'image | Dimensions | Nombre de threads | Temps d'exécution (millisecondes) | Gain sur la dernière version
 | :--: | :--: | :--: | :--: | :--: | :--: |
-| *GPU V1* | `color_building.jpg` | 853 x 1280 | 16 x 16 | 0.40 | x70 |
+| *GPU V1* | `color_building.jpg` | 853 x 1280 | 16 x 16 | 0.39 | x70 |
 | *GPU V1* | `color_house.jpg` | 1920 x 1279 | 16 x 16 | 0.75 | x84 |
-| *GPU V1* | `color_building.jpg` | 853 x 1280 | 32 x 32 | 0.33 | x84 |
-| *GPU V1* | `color_house.jpg` | 1920 x 1279 | 32 x 32 | 0.60 | x105 |
+| *GPU V1* | `color_building.jpg` | 853 x 1280 | 32 x 32 | 0.32 | x84 |
+| *GPU V1* | `color_house.jpg` | 1920 x 1279 | 32 x 32 | 0.59 | x105 |
 
 #### Deuxième version : Avec mémoire partagée
 
