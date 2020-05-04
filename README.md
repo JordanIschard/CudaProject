@@ -36,7 +36,7 @@ Cette version va simplement effectuer un **grayscale** et ensuite la convolution
 
 Cette version va effectuer un **grayscale** et ensuite la convolution désirée. La gain et important mais il reste un gros soucis lié au données entre le **grayscale** et la covolution qui sont obligé d'être réimportées sur le GPU.
 
-Cette partie m'a bloqué sur un point que je ne pensais pas compliqués. Lorsque que l'on récupère les données d'une image en noir et blanc la taille de celle-ci est `rows*cols` mais par contre pour une image en couleur c'est `3* rows*cols`.
+Cette partie m'a bloqué sur un point que je ne pensais pas compliqués. Lorsque que l'on récupère les données d'une image en noir et blanc la taille de celle-ci est `rows*cols` mais par contre pour une image en couleur c'est `3*rows*cols`.
 
 | Version | Nom de l'image | Dimensions | Nombre de threads | Temps d'exécution (millisecondes) | Gain sur la dernière version
 | :--: | :--: | :--: | :--: | :--: | :--: |
@@ -60,12 +60,16 @@ Un problème est survenu via l'utilisation de la mémoire partagée. En effet, l
 
 #### Troisième version : Avec streams
 
+Nous pouvons pousser le parallélisme encore plus loin avec les streams. Théoriquement, en séparant en deux l'images de départ pour le donner à deux streams différents devrait nous faire gagner du temps. En pratique on a aucun gain par rapport à la version précédente.
+
+La jonction entre les deux streams n'est pas bien calculé et après différents essais je n'ai pas réussi à régler ce problème.
+
 | Version | Nom de l'image | Dimensions | Nombre de threads | Nombre de streams | Temps d'exécution (millisecondes) | Gain sur la dernière version
 | :--: | :--: | :--: | :--: | :--: | :--: | :--: |
-| *GPU V3* | `color_building.jpg` | 853 x 1280 | 16 x 16 | 2 | 0.27 | ? |
-| *GPU V3* | `color_house.jpg` | 1920 x 1279 | 16 x 16 | 2 | 0.55 | ? |
+| *GPU V3* | `color_building.jpg` | 853 x 1280 | 16 x 16 | 2 | 0.28 | x1 |
+| *GPU V3* | `color_house.jpg` | 1920 x 1279 | 16 x 16 | 2 | 0.51 | x1 |
 | *GPU V3* | `color_building.jpg` | 853 x 1280 | 32 x 32 | 2 | 0.26 | x1 |
-| *GPU V3* | `color_house.jpg` | 1920 x 1279 | 32 x 32 | 2 | 0.51 | ? |
+| *GPU V3* | `color_house.jpg` | 1920 x 1279 | 32 x 32 | 2 | 0.48 | x1 |
 
 ### Résumé des résultats
 
@@ -73,4 +77,4 @@ Un problème est survenu via l'utilisation de la mémoire partagée. En effet, l
 | :--: | :--: | :--: | :--: | :--: |
 | *GPU V1* | 32 x 32 | X | 0.46 | x97 |
 | *GPU V2* | 32 x 32 | X | 0.37 | x1.26 |
-| *GPU V3* | 32 x 32 | ? | ? | ? |
+| *GPU V3* | 32 x 32 | 2 | 0.37 | x1 |
