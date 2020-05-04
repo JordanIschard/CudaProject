@@ -92,7 +92,7 @@ int main(int argc, char** argv)
         //if( err != cudaSuccess ) { std::cerr << "Erreur malloc data_out_streams" << std::endl; } 
 
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
-            err = cudaMalloc(&data_out_streams[i], ((row /streamsNumber) * 4*i) * cols);
+            err = cudaMalloc(&data_out_streams[i], ((rows /streamsNumber) * 4*i) * cols);
             //if( err != cudaSuccess ) { std::cerr << "Erreur malloc data_out_streams[" << i << "]" << std::endl; } 
         }
 
