@@ -145,10 +145,10 @@ int main(int argc, char** argv)
 
         cudaDeviceSynchronize();
         err = cudaGetLastError();
-        /*if( err != cudaSuccess )
+        if( err != cudaSuccess )
         {
             printf("Errors found :\n %s", cudaGetErrorString(err));
-        }*/
+        }
 
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
             cudaMemcpyAsync( out.data() + i * ((rows / streamsNumber) - 4*i) * cols, data_out_streams[i], ((rows / streamsNumber) + 4*i) * cols, cudaMemcpyDeviceToHost, streams[i]);
@@ -160,7 +160,7 @@ int main(int argc, char** argv)
         cudaEventElapsedTime(&milliseconds, start, stop);
         printf("Execution time : %f\n",milliseconds);
 
-        cv::imwrite( "outCudaV2.jpg", image_out);
+        cv::imwrite( "outCudaV4.jpg", image_out);
 
 
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
