@@ -2,7 +2,7 @@
 
 ## Introduction
 
-Le projet **CUDA** est réalisé en binôme. IL est ici composée de *Mathieu Guilbert* et de *Jordan Ischard*.
+Le projet **CUDA** est réalisé en binôme. Il est ici composée de *Mathieu Guilbert* et de *Jordan Ischard*.
 
 Nous avons choisi de faire la convolution **laplacian of gaussian** avec un **grayscale** ainsi que la convolution **à déterminer** avec un **à déterminer**. Ces convolutions seront fait respectivement par Jordan Ischard et Mathieu Guilbert.
 
