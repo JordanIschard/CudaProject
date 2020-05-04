@@ -81,7 +81,7 @@ int main(int argc, char** argv)
         //if( err != cudaSuccess ) { std::cerr << "Erreur malloc data_in_streams" << std::endl; } 
 
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
-            err = cudaMalloc(&data_in_streams[i], ((rows + 4*i) / streamsNumber) * cols *3);
+            err = cudaMalloc(&data_in_streams[i], size_data_in);
             //if( err != cudaSuccess ) { std::cerr << "Erreur malloc data_in_streams[" << i << "]" << std::endl; } 
         }
 
@@ -92,7 +92,7 @@ int main(int argc, char** argv)
         //if( err != cudaSuccess ) { std::cerr << "Erreur malloc data_out_streams" << std::endl; } 
 
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
-            err = cudaMalloc(&data_out_streams[i], ((rows * 4*i) /streamsNumber) * cols);
+            err = cudaMalloc(&data_out_streams[i], size_data_out);
             //if( err != cudaSuccess ) { std::cerr << "Erreur malloc data_out_streams[" << i << "]" << std::endl; } 
         }
 
@@ -116,7 +116,7 @@ int main(int argc, char** argv)
         }
 
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
-            cudaMemcpyAsync( data_in_streams[i], data_rgb + i * ((rows - 4*i) / streamsNumber) * cols * 3, ((rows + 4*i) / streamsNumber) * cols * 3, cudaMemcpyHostToDevice, streams[i]);
+            cudaMemcpyAsync( data_in_streams[i], data_rgb + i * size_data_in, size_data_in, cudaMemcpyHostToDevice, streams[i]);
         }
                                                                     
         //std::cout << "Image d'entrée mise sur le device" << std::endl;
@@ -145,13 +145,13 @@ int main(int argc, char** argv)
 
         cudaDeviceSynchronize();
         err = cudaGetLastError();
-        if( err != cudaSuccess )
+        /*if( err != cudaSuccess )
         {
             printf("Errors found :\n %s", cudaGetErrorString(err));
-        }
+        }*/
 
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
-            cudaMemcpyAsync( out.data() + i * ((rows - 4*i) / streamsNumber) * cols, data_out_streams[i], ((rows + 4*i)/ streamsNumber) * cols, cudaMemcpyDeviceToHost, streams[i]);
+            cudaMemcpyAsync( out.data() + i * size_data_out, data_out_streams[i], size_data_out, cudaMemcpyDeviceToHost, streams[i]);
         }
         
         // On récupère le temps d'exécution
