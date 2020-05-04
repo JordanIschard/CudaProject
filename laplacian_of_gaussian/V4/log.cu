@@ -81,7 +81,7 @@ int main(int argc, char** argv)
         //if( err != cudaSuccess ) { std::cerr << "Erreur malloc data_in_streams" << std::endl; } 
 
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
-            err = cudaMalloc(&data_in_streams[i], size_data_in);
+            err = cudaMalloc(&data_in_streams[i], ((rows / streamsNumber) + 4*i) * cols *3);
             //if( err != cudaSuccess ) { std::cerr << "Erreur malloc data_in_streams[" << i << "]" << std::endl; } 
         }
 
@@ -92,7 +92,7 @@ int main(int argc, char** argv)
         //if( err != cudaSuccess ) { std::cerr << "Erreur malloc data_out_streams" << std::endl; } 
 
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
-            err = cudaMalloc(&data_out_streams[i], size_data_out);
+            err = cudaMalloc(&data_out_streams[i], ((row /streamsNumber) * 4*i) * cols);
             //if( err != cudaSuccess ) { std::cerr << "Erreur malloc data_out_streams[" << i << "]" << std::endl; } 
         }
 
@@ -116,7 +116,7 @@ int main(int argc, char** argv)
         }
 
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
-            cudaMemcpyAsync( data_in_streams[i], data_rgb + i * size_data_in - 4 * i, size_data_in, cudaMemcpyHostToDevice, streams[i]);
+            cudaMemcpyAsync( data_in_streams[i], data_rgb + i * ((rows / streamsNumber) - 4*i) * cols * 3, ((rows / streamsNumber) + 4*i) * cols * 3, cudaMemcpyHostToDevice, streams[i]);
         }
                                                                     
         //std::cout << "Image d'entrée mise sur le device" << std::endl;
@@ -151,7 +151,7 @@ int main(int argc, char** argv)
         }*/
 
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){
-            cudaMemcpyAsync( out.data() + i * size_data_out - 4 * i, data_out_streams[i], size_data_out, cudaMemcpyDeviceToHost, streams[i]);
+            cudaMemcpyAsync( out.data() + i * ((rows / streamsNumber) - 4*i) * cols, data_out_streams[i], ((rows / streamsNumber) + 4*i) * cols, cudaMemcpyDeviceToHost, streams[i]);
         }
         
         // On récupère le temps d'exécution
