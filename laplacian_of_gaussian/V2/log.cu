@@ -81,7 +81,7 @@ int main(int argc, char** argv)
         // On crée une copie des informations de sortie sur le device
         unsigned char* data_out_device;
 
-        cudaMalloc(&data_rgb_device, 3 * rows * cols);
+        cudaMalloc(&data_rgb_device, 3 * rows * cols);  // 1 pixel = 3 couleurs
         cudaMalloc(&data_gray_device, rows * cols);
         cudaMalloc(&data_out_device, rows * cols);
 
