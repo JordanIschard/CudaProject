@@ -52,9 +52,11 @@ void grayscale(unsigned char* data_in, unsigned char* data_out, int rows, int co
             if( i >= 1 && i < (rows - 1) && j >= 1 && j < (cols - 1) )
             {
                 result = (data_in[(i * cols + j)]
-                          + data_in[((i-1) * cols + j)] + data_in[((i+1) * cols + j)] + data_in[(i * cols + (j-1))] + data_in[(i * cols + (j+1))]
-                          + data_in[((i-1) * cols + (j-1))] + data_in[((i-1) * cols + (j+1))] + data_in[((i+1) * cols + (j-1))] + data_in[((i+1) * cols + (j+1))]
-                        )* (1/9);
+                          + data_in[((i-1) * cols + j)] + data_in[((i+1) * cols + j)] 
+						  + data_in[(i * cols + (j-1))] + data_in[(i * cols + (j+1))]
+                          + data_in[((i-1) * cols + (j-1))] + data_in[((i-1) * cols + (j+1))]
+						  + data_in[((i+1) * cols + (j-1))] + data_in[((i+1) * cols + (j+1))]
+                        ) /9;
 
                 result = result * result;
                 result > 255*255 ? result = 255*255 : result;
