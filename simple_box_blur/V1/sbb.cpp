@@ -85,7 +85,8 @@ int main(int argc, char** argv)
 
         auto stop = chrono::high_resolution_clock::now();
 
-        imwrite("out/outCPP.jpg",out);
+        imwrite("out/outCPPsbb.jpg",out);
+		print("outCPPsbb Fait normallement peut etre j'espere ")
 
         auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
 
