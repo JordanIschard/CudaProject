@@ -76,6 +76,7 @@ int main(int argc, char** argv)
         unsigned char* tmp = (unsigned char*)malloc((image.cols * image.rows)*sizeof(unsigned char));
         unsigned char* data_out = (unsigned char*)malloc((image.cols * image.rows)*sizeof(unsigned char));
 
+		Mat gray( image.rows , image.cols , CV_8UC1 , tmp);
         Mat out( image.rows , image.cols , CV_8UC1 , data_out);
 
         auto start = chrono::high_resolution_clock::now();
@@ -85,6 +86,7 @@ int main(int argc, char** argv)
 
         auto stop = chrono::high_resolution_clock::now();
 
+		imwrite("outCPPsbbGray.jpg",gray);
         imwrite("outCPPsbb.jpg",out);
 
         auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
