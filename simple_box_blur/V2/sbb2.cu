@@ -28,7 +28,7 @@ __global__ void simple_box_blur(unsigned char const * const data_gray, unsigned 
 		auto result = (data_gray[(j * cols + i)] * 
 		+ data_gray[((j-1) * cols + i)] + data_gray[((j+1) * cols + i)] + data_gray[(j * cols + (i-1))] + data_gray[(j * cols + (i+1))] 	
 		+ data_gray[((j-1) * cols +(i-1))] + data_gray[((j-1) * cols +(i+1))] + data_gray[((j+1) * cols +(i-1))] + data_gray[((j+1) * cols +(i+1))]	
-		)* (1/9);
+		) /9;
 
         result = result * result;
         result = result > 255*255 ? result = 255*255 : result;
@@ -114,7 +114,7 @@ int main(int argc, char** argv)
         cudaEventElapsedTime(&milliseconds, start, stop);
         printf("Execution time : %f\n",milliseconds);
 
-        cv::imwrite( "outSbbCuda.jpg", image_out);
+        cv::imwrite( "outSbbV2.jpg", image_out);
 
         // On libère l'espace sur le device
         cudaFree(data_rgb_device);
