@@ -29,7 +29,7 @@ __global__ void simple_box_blur(unsigned char * data_rgb, unsigned char * const 
 		+ data_gray[(gray_j * cols_gray + (gray_i-1))] + data_gray[(gray_j * cols_gray + (gray_i+1))]
 		+ data_gray[((gray_j-1) * cols_gray + (gray_i-1))] + data_gray[((gray_j-1) * cols_gray + (gray_i+1))]
 		+ data_gray[((gray_j+1) * cols_gray + (gray_i-1))] + data_gray[((gray_j+1) * cols_gray + (gray_i+1))]		
-		) * (1/9)
+		) * (1/9);
 
         result = result * result;
         result = result > 255*255 ? result = 255*255 : result;
