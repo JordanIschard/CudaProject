@@ -21,7 +21,7 @@ __global__ void simple_box_blur(unsigned char * data_rgb, unsigned char * const 
 
     __syncthreads();
 
-    if( gray_i > 1 && gray_i < (cols_gray - 2) && gray_j > 1 && gray_j < (blockDim.y - 2))
+    if( gray_i > 1 && gray_i < (cols_gray - 1) && gray_j > 1 && gray_j < (blockDim.y - 1))
     {
         
 		auto result = (data_gray[(gray_j * cols_gray + gray_i)]
