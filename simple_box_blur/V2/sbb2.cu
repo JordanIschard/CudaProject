@@ -23,11 +23,13 @@ __global__ void simple_box_blur(unsigned char const * const data_gray, unsigned 
     auto j = blockIdx.y * blockDim.y + threadIdx.y;
 
 
-    if( i > 1 && i < (cols - 1) && j > 1 && j < (rows - 1))
+    if( i >= 1 && i < (cols - 1) && j >= 1 && j < (rows - 1))
     {
 		auto result = (data_gray[(j * cols + i)] * 
-		+ data_gray[((j-1) * cols + i)] + data_gray[((j+1) * cols + i)] + data_gray[(j * cols + (i-1))] + data_gray[(j * cols + (i+1))] 	
-		+ data_gray[((j-1) * cols +(i-1))] + data_gray[((j-1) * cols +(i+1))] + data_gray[((j+1) * cols +(i-1))] + data_gray[((j+1) * cols +(i+1))]	
+		+ data_gray[((j-1) * cols + i)] + data_gray[((j+1) * cols + i)]
+		+ data_gray[(j * cols + (i-1))] + data_gray[(j * cols + (i+1))] 	
+		+ data_gray[((j-1) * cols +(i-1))] + data_gray[((j-1) * cols +(i+1))]
+		+ data_gray[((j+1) * cols +(i-1))] + data_gray[((j+1) * cols +(i+1))]	
 		) /9;
 
         result = result * result;
