@@ -22,7 +22,6 @@ __global__ void simple_box_blur(unsigned char const * const data_gray, unsigned 
     auto i = blockIdx.x * blockDim.x + threadIdx.x;
     auto j = blockIdx.y * blockDim.y + threadIdx.y;
 
-
     if( i >= 1 && i < (cols - 1) && j >= 1 && j < (rows - 1))
     {
 		auto result = (data_gray[(j * cols + i)] 
@@ -31,6 +30,26 @@ __global__ void simple_box_blur(unsigned char const * const data_gray, unsigned 
 		+ data_gray[((j-1) * cols +(i-1))] + data_gray[((j-1) * cols +(i+1))]
 		+ data_gray[((j+1) * cols +(i-1))] + data_gray[((j+1) * cols +(i+1))]	
 		) /9;
+
+        result = result * result;
+        result = result > 255*255 ? result = 255*255 : result;
+        data_out[ j * cols + i ] = sqrt((float) result);
+    }
+}
+
+__global__ void edge_detection(unsigned char const * const data_in, unsigned char * const data_out, std::size_t rows, std::size_t cols)
+{
+    auto i = blockIdx.x * blockDim.x + threadIdx.x;
+    auto j = blockIdx.y * blockDim.y + threadIdx.y;
+
+    if( i >= 1 && i < (cols - 1) && j >= 1 && j < (rows - 1))
+    {
+		auto result = data_in[(j * cols + i)] *8 +(
+		+ data_in[((j-1) * cols + i)] + data_in[((j+1) * cols + i)]
+		+ data_in[(j * cols + (i-1))] + data_in[(j * cols + (i+1))] 	
+		+ data_in[((j-1) * cols +(i-1))] + data_in[((j-1) * cols +(i+1))]
+		+ data_in[((j+1) * cols +(i-1))] + data_in[((j+1) * cols +(i+1))]	
+		) *(-1);
 
         result = result * result;
         result = result > 255*255 ? result = 255*255 : result;
@@ -76,10 +95,12 @@ int main(int argc, char** argv)
         unsigned char * data_gray_device;
         // On crée une copie des informations de sortie sur le device
         unsigned char* data_out_device;
+        // unsigned char * data_edge_device;
 
         cudaMalloc(&data_rgb_device, 3 * rows * cols);
         cudaMalloc(&data_gray_device, rows * cols);
         cudaMalloc(&data_out_device, rows * cols);
+        // cudaMalloc(&data_edge_device, rows * cols);
 
         cudaMemcpy(data_rgb_device, data_rgb,  3 * rows * cols, cudaMemcpyHostToDevice );
 
@@ -96,6 +117,8 @@ int main(int argc, char** argv)
 
         // lancement du programme
         simple_box_blur<<< blocks , threads >>>(data_gray_device, data_out_device, rows, cols);
+
+		//edge_detection<<< blocks , threads >>>(data_gray_device, data_edge_device, rows, cols);
 
         // On arrête le timer
         cudaEventRecord(stop);
@@ -122,6 +145,7 @@ int main(int argc, char** argv)
         cudaFree(data_rgb_device);
         cudaFree(data_gray_device);
         cudaFree(data_out_device);
+		// cudaFree(data_edge_device);
     }
 
     return 0;
