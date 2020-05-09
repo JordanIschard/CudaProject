@@ -23,8 +23,19 @@ __global__ void simple_box_blur(unsigned char * data_rgb, unsigned char * const 
 
     if( gray_i > 1 && gray_i < (cols_gray - 1) && gray_j > 1 && gray_j < (blockDim.y - 1))
     {
-        
-		auto result = (data_gray[(gray_j * cols_gray + gray_i)]
+        //Edge Detection
+		auto result = data_in[(j * cols + i)] *8 +(
+		+ data_in[((j-1) * cols + i)] + data_in[((j+1) * cols + i)]
+		+ data_in[(j * cols + (i-1))] + data_in[(j * cols + (i+1))] 	
+		+ data_in[((j-1) * cols +(i-1))] + data_in[((j-1) * cols +(i+1))]
+		+ data_in[((j+1) * cols +(i-1))] + data_in[((j+1) * cols +(i+1))]	
+		) *(-1);
+		
+		result = result * result;
+        result = result > 255*255 ? result = 255*255 : result;
+		
+		//Box Blur
+		result = (data_gray[(gray_j * cols_gray + gray_i)]
 		+ data_gray[((gray_j-1) * cols_gray + gray_i)] + data_gray[((gray_j+1) * cols_gray + gray_i)]
 		+ data_gray[(gray_j * cols_gray + (gray_i-1))] + data_gray[(gray_j * cols_gray + (gray_i+1))]
 		+ data_gray[((gray_j-1) * cols_gray + (gray_i-1))] + data_gray[((gray_j-1) * cols_gray + (gray_i+1))]
