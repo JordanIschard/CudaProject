@@ -19,7 +19,8 @@ Cette convolution utilise la matrice suivante :
 | 0 |-1 |-2 |-1 | 0 |
 | 0 | 0 |-1 | 0 | 0 |
 
-Il est nécessaire d'effectuer un filtre **grayscale** sur l'image avant l'utilisation de cette convolution. D'où son rajout dans le programme. La première version va consister à effectuer cette convolution sur *CPU*, ensuite nous passerons sur *GPU* sans utilisation de mémoire partagée. Nous ajouterons la mémoire partagée pour voir le gain en temps d'exécution et enfin si nous avons le temps on utilisera les streams.
+Il est nécessaire d'effectuer un filtre **grayscale** sur l'image avant l'utilisation de cette convolution. D'où son rajout dans le programme. La première version va consister à effectuer cette convolution sur *CPU*, ensuite nous passerons sur *GPU* sans utilisation de mémoire partagée. 
+Dans la version suivante, nous ajouterons la mémoire partagée pour voir le gain en temps d'exécution et enfin, si nous avons le temps, nous utiliserons les streams.
 
 ### Programme sur CPU
 
@@ -34,7 +35,7 @@ Cette version va simplement effectuer un **grayscale** et ensuite la convolution
 
 #### Première version : Sans mémoire partagée
 
-Cette version va effectuer un **grayscale** et ensuite la convolution désirée. La gain et important mais il reste un gros soucis lié au données entre le **grayscale** et la covolution qui sont obligé d'être réimportées sur le GPU.
+Cette version va effectuer un **grayscale** et ensuite la convolution désirée. La gain et important mais il reste un gros soucis lié au données entre le **grayscale** et la convolution qui sont obligé d'être réimportées sur le GPU.
 
 Cette partie m'a bloqué sur un point que je ne pensais pas compliqués. Lorsque que l'on récupère les données d'une image en noir et blanc la taille de celle-ci est `rows*cols` mais par contre pour une image en couleur c'est `3*rows*cols`.
 
@@ -78,3 +79,27 @@ La jonction entre les deux streams n'est pas bien calculé et après différents
 | *GPU V1* | 32 x 32 | X | 0.46 | x97 |
 | *GPU V2* | 32 x 32 | X | 0.37 | x1.26 |
 | *GPU V3* | 32 x 32 | 2 | 0.37 | x1 |
+
+
+
+## 2ème convolution : **Simple box blur**
+
+Cette convolution utilise la matrice suivante :
+|     |     |     |
+|-----|-----|-----|
+| 1/9 | 1/9 | 1/9 |
+| 1/9 | 1/9 | 1/9 |
+| 1/9 | 1/9 | 1/9 |
+Comme pour la première convolution, il est nécessaire d'utiliser un filtre **grayscale** sur l'image avant l'utilisation de cette convolution.
+La première version va consister à effectuer la convolution **Simple box blur** sur *CPU*. La seconde sera sur *GPU* sans utilisation de mémoire partagée.
+Enfin, la troisième sera sur GPU avec utilisation de la mémoire partagées.
+
+### Programme sur CPU
+
+Cette version va simplement effectuer un **grayscale** et ensuite la convolution désirée. Sur cette partie aucun problème n'a été remarqué.
+
+| Version | Nom de l'image | Dimensions | Temps d'exécution (millisecondes) |
+| :--: | :--: | :--: | :--: |
+| *CPU* | `color_building.jpg` | 853 x 1280 | ? |
+| *CPU* | `color_house.jpg` | 1920 x 1279 | ? |
+
