@@ -112,23 +112,23 @@ int main(int argc, char** argv)
 
 
         unsigned char* tmp = (unsigned char*)malloc((image.cols * image.rows)*sizeof(unsigned char));
-        //unsigned char* edgeDetected = (unsigned char*)malloc((image.cols * image.rows)*sizeof(unsigned char));
+        unsigned char* edgeDetected = (unsigned char*)malloc((image.cols * image.rows)*sizeof(unsigned char));
         unsigned char* data_out = (unsigned char*)malloc((image.cols * image.rows)*sizeof(unsigned char));
 
 		//Mat gray( image.rows , image.cols , CV_8UC1 , tmp);  //pour verifier grayscale
-		//Mat edge( image.rows , image.cols , CV_8UC1 , edgeDetected);
+	Mat edge( image.rows , image.cols , CV_8UC1 , edgeDetected);
         Mat out( image.rows , image.cols , CV_8UC1 , data_out);
 
         auto start = chrono::high_resolution_clock::now();
 
         grayscale(image.data,tmp,image.rows,image.cols);
-		//edge_detection(tmp,edgeDetected,image.rows,image.cols);
+	edge_detection(tmp,edgeDetected,image.rows,image.cols);
         simple_box_blur(tmp,data_out,image.rows,image.cols);
 
         auto stop = chrono::high_resolution_clock::now();
 
 		//imwrite("outCPPsbbGray.jpg",gray);  //pour verifier grayscale
-		//imwrite("outCPPed.jpg",gray);  //pour Edge Detection
+	imwrite("outCPPed.jpg",edge);  //pour Edge Detection
         imwrite("outCPPsbb.jpg",out);
 
         auto duration = chrono::duration_cast<chrono::milliseconds>(stop - start);
