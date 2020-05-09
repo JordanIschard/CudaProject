@@ -95,12 +95,12 @@ int main(int argc, char** argv)
         unsigned char * data_gray_device;
         // On crée une copie des informations de sortie sur le device
         unsigned char* data_out_device;
-        // unsigned char * data_edge_device;
+        unsigned char * data_edge_device;
 
         cudaMalloc(&data_rgb_device, 3 * rows * cols);
         cudaMalloc(&data_gray_device, rows * cols);
         cudaMalloc(&data_out_device, rows * cols);
-        // cudaMalloc(&data_edge_device, rows * cols);
+        cudaMalloc(&data_edge_device, rows * cols);
 
         cudaMemcpy(data_rgb_device, data_rgb,  3 * rows * cols, cudaMemcpyHostToDevice );
 
@@ -116,9 +116,8 @@ int main(int argc, char** argv)
         grayscale<<< blocks , threads >>>(data_rgb_device, data_gray_device, rows, cols);
 
         // lancement du programme
-        simple_box_blur<<< blocks , threads >>>(data_gray_device, data_out_device, rows, cols);
-
-		//edge_detection<<< blocks , threads >>>(data_gray_device, data_edge_device, rows, cols);
+		edge_detection<<< blocks , threads >>>(data_gray_device, data_edge_device, rows, cols);
+        simple_box_blur<<< blocks , threads >>>(data_edge_device, data_out_device, rows, cols);
 
         // On arrête le timer
         cudaEventRecord(stop);
@@ -145,7 +144,7 @@ int main(int argc, char** argv)
         cudaFree(data_rgb_device);
         cudaFree(data_gray_device);
         cudaFree(data_out_device);
-		// cudaFree(data_edge_device);
+		cudaFree(data_edge_device);
     }
 
     return 0;

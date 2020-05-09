@@ -100,6 +100,6 @@ Cette version va simplement effectuer un **grayscale** et ensuite la convolution
 
 | Version | Nom de l'image | Dimensions | Temps d'exécution (millisecondes) |
 | :--: | :--: | :--: | :--: |
-| *CPU* | `color_building.jpg` | 853 x 1280 | ? |
+| *CPU* | `color_building.jpg` | 853 x 1280 | 43 |
 | *CPU* | `color_house.jpg` | 1920 x 1279 | ? |
 
