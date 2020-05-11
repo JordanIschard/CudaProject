@@ -160,7 +160,7 @@ int main(int argc, char** argv)
         cudaEventElapsedTime(&milliseconds, start, stop);
         printf("Execution time : %f\n",milliseconds);
 
-        cv::imwrite( "outCudaV4.jpg", image_out);
+        cv::imwrite( "outCudaV3.jpg", image_out);
 
 
         for( std::size_t i = 0 ; i < streamsNumber ; ++i ){

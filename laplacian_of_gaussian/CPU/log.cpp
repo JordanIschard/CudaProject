@@ -1,4 +1,4 @@
-#include <opencv2/opencv.hpp> 
+#include <opencv2/opencv.hpp>
 #include <vector>
 #include <chrono>
 
@@ -58,7 +58,7 @@ void laplacian_of_gaussian(unsigned char* data_in, unsigned char* data_out, int 
                 result = data_in[(i * cols + j)] * 16
 
                 // Tous les pixels que l'on multiplie par -2
-                + ( data_in[((i-1) * cols + j)] + data_in[((i-+1) * cols + j)] + data_in[(i * cols + (j-1))] + data_in[(i * cols + (j+1))] ) * -2
+                + ( data_in[((i-1) * cols + j)] + data_in[((i+1) * cols + j)] + data_in[(i * cols + (j-1))] + data_in[(i * cols + (j+1))] ) * -2
 
                 // Tous les pixels que l'on multiplie par -1
                 + ( data_in[((i-2) * cols + j)] + data_in[((i+2) * cols + j)] + data_in[(i * cols + (j-2))] + data_in[(i * cols + (j+2))] 

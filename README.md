@@ -97,7 +97,7 @@ Ces convolutions utilisent les matrices suivantes :
 | -1 |  8 | -1 |
 | -1 | -1 | -1 |
 
-
+|     |     |     |
 |-----|-----|-----|
 | 1/9 | 1/9 | 1/9 |
 | 1/9 | 1/9 | 1/9 |
