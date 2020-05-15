@@ -103,9 +103,13 @@ Ces convolutions utilisent les matrices suivantes :
 | 1/9 | 1/9 | 1/9 |
 | 1/9 | 1/9 | 1/9 |
 
+
 Comme pour la première convolution, il est nécessaire d'utiliser un filtre **grayscale** sur l'image avant d'utiliser de les convolutions voulues.
 La première version va consister à effectuer les convolutions **Edge Detection et Simple box blur** sur *CPU*. La seconde sera sur *GPU* sans utilisation de mémoire partagée.
 Enfin, la troisième sera sur GPU avec utilisation de la mémoire partagées.
+
+ATTENTION: la convolution Simple box blur n'altère que très peu l'image d'entrée. Pour s'assurer qu'elle s'est bien réalisée,
+vous pouvez cependant comparer la version finale de l'image avec la version intermédiaire sur laquelle le grayscale et l'edge detection ont été effectués.
 
 ### Programme sur CPU
 
@@ -122,7 +126,7 @@ Cette version va simplement effectuer un **grayscale** et ensuite la convolution
 #### Première version : Sans mémoire partagée
 
 Cette version va effectuer un **grayscale** et ensuite la convolution désirée.
-Comme pour la convolution **Laplacian of Gaussian**, on gagne du temps avec cette version mais il reste un gros soucis lié aux données entre le **grayscale** et la convolution qui sont réimportées sur le GPU.
+Comme pour la convolution **Laplacian of Gaussian**, on gagne du temps avec cette version, mais il reste le problème lié aux données entre le **grayscale** et la convolution qui sont réimportées sur le GPU.
 
 | Version | Nom de l'image | Dimensions | Nombre de threads | Nombre de blocs | Temps d'exécution (millisecondes)
 | :--: | :--: | :--: | :--: | :--: | :--: |
@@ -134,6 +138,6 @@ Comme pour la convolution **Laplacian of Gaussian**, on gagne du temps avec cett
 
 #### Deuxième version (dossier V3) : Avec mémoire partagée
 
-//TODO
 
 Ici aussi, un problème majeur à été l'apparition d'un cadrillage sur l'image de sortie.
+Je n'ai pas réussi à résoudre ce problème.
